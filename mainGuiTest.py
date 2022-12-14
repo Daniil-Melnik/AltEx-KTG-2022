@@ -35,6 +35,119 @@ class App(customtkinter.CTk):
     class Colors:
         graphInfoTrue = "#84a98c"
         graphInfoFalse = "#9b2226"
+          
+    #################################################################################################################################################################################
+    #################################################################################################################################################################################
+    #  Algorithm
+    #################################################################################################################################################################################
+    #################################################################################################################################################################################
+    def ERG():
+        BV=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+        E=[]
+        val_map = {}
+        n=int(App.txtn.get()) 
+        us = App.selected.get()
+        print(us)
+        if (us==1):
+            p=float(App.txtp.get())
+            App.txtс.delete(0, END)
+            App.txtс.insert(0,'c')
+        elif (us==2):
+            c=float(App.txtс.get())
+            p=c*(math.log(n)/n)
+            App.txtp.delete(first=0,last=END)
+            App.txtp.insert(0, str(p))
+        elif (us==3):
+            c=float(App.txtс.get())
+            p=c/n
+            App.txtp.delete(first=0,last=END)
+            App.txtp.insert(0, str(p))
+        elif (us==4):
+            w=n/math.log(n)
+            p=w/n
+            App.txtp.delete(first=0,last=END)
+            App.txtp.insert(0, str(p))
+        elif (us==5):
+            a=1/n
+            p=a/n
+            App.txtp.delete(first=0,last=END)
+            App.txtp.insert(0, str(p))
+        elif (us==6):
+            p=1/(n**3)
+            App.txtp.delete(first=0,last=END)
+            App.txtp.insert(0, str(p))
+        elif (us==7):
+            p=n*math.log(n)/n
+            App.txtp.delete(first=0,last=END)
+            App.txtp.insert(0, str(p))
+        elif (us==8):
+            p=float(App.txtp.get())
+            App.txtс.delete(0, END)
+            App.txtс.insert(0,'c')
+
+        V=[]
+        for i in range(n*(n-1)//2):
+            E.append([])
+
+        for i in range (n):
+            V.append(BV[i])
+            val_map[BV[i]]=1.0
+        m=0
+
+        for i in range(n):
+            for j in range(i+1, len(V)):
+                E[m].append(V[i])
+                E[m].append(V[j])
+                m+=1
+        
+        G = nx.Graph()
+        G.add_nodes_from(V)
+        for i in range (n*(n-1)//2):
+            k=random.randint(0,1000)/1000
+            if (k<=p):
+                G.add_edge(E[i][0],E[i][1])    
+        
+        if (us==4):
+            all_cliques= nx.enumerate_all_cliques(G)
+            triad_cliques=[x for x in all_cliques if len(x)==3 ]
+            if (len(triad_cliques)!=0):
+                for v in triad_cliques[0]:
+                    val_map[v]=0.1
+                
+        all_cliques= nx.enumerate_all_cliques(G)
+        triad_cliques=[x for x in all_cliques if len(x)==3 ]
+        if (len(triad_cliques)!=0):
+            App.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoTrue)
+        else:
+            App.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoFalse)
+
+        if (us==8):
+            for v in (max(nx.connected_components(G))):
+                val_map[v]=0.1 
+
+        values = [val_map.get(node, 0.25) for node in G.nodes()]
+        
+        plt.clf()
+        if (nx.check_planarity(G, counterexample=False)[0]==True):
+            nx.draw_planar(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
+            App.labelPlanarity.configure(fg_color=App.Colors.graphInfoTrue)
+        else:
+            nx.draw_circular(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
+            App.labelPlanarity.configure(fg_color=App.Colors.graphInfoFalse)
+
+        if (nx.is_connected(G)):
+            App.labelConnectivity.configure(fg_color=App.Colors.graphInfoTrue)
+        else:
+            App.labelConnectivity.configure(fg_color=App.Colors.graphInfoFalse)
+        print(max(nx.connected_components(G)))
+        plt.axis('on')
+        # plt.savefig("saved-graph.png")
+        plt.clf()
+            
+        topImg = PhotoImage(file="st.png")
+        App.graphImage.configure(image=topImg)
+        App.graphImage.image = topImg
+
     ################################################
     #    Class initialization - object creation    #
     ################################################
@@ -90,16 +203,57 @@ class App(customtkinter.CTk):
         self.graphImage = customtkinter.CTkCanvas(master=self.graphVisualizeFrame, width=self.GRAPH_RESOLUTION-10, height=self.GRAPH_RESOLUTION-10,background="Black")
         self.graphImage.image = ImageTk.PhotoImage(graph) 
         self.graphImage.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)
-        self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-20,height=50,text="Связность")
-        self.labelPlanarity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-20,height=50,text="Планарность")
-        self.labelTrianglesPresence= customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-20,height=50,text="Наличие треугольников")
-        self.labelConnectivity.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)
-        self.labelPlanarity.grid(row=0, column=1, sticky="nswe", padx=0, pady=0)
-        self.labelTrianglesPresence.grid(row=0, column=2, sticky="nswe", padx=0, pady=0)
-        #################################################
-        #    creating elements for R_parametersFrame    #
-        #################################################
-        
+        self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
+        self.labelPlanarity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Планарность")
+        self.labelTrianglesPresence= customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Наличие треугольников")
+        self.labelConnectivity.grid(row=0, column=0, sticky="nswe", padx=5, pady=0)
+        self.labelPlanarity.grid(row=0, column=1, sticky="nswe", padx=5, pady=0)
+        self.labelTrianglesPresence.grid(row=0, column=2, sticky="nswe", padx=5, pady=0)
+        ############################################
+        #    creating elements for optionsFrame    #
+        ############################################
+        selected = IntVar()
+        labedRad = customtkinter.CTkLabel(master=self.optionsFrame,text='Способы задания графа:')
+        labedRad.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        #Вероятностный граф
+        radProbability = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Вероятностный граф', value=1, variable=selected)
+        radProbability.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        #Связность графа
+        radConnectivity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Связность (теорема 13)', value=2, variable=selected)
+        radConnectivity.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        #Планарность графа
+        radPlanarity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Планарность (теорема 26)', value=3, variable=selected)
+        radPlanarity.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
+        #Присутствие треугольников
+        radNonTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Присутствие треугольников (теорема 12)', value=4, variable=selected)
+        radNonTriangle.grid(row=4, column=0, sticky="nswe", padx=10, pady=10)
+        #Отсутсвие треугольников
+        radTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Отсутствие треугольников (теорема 10)', value=5, variable=selected)
+        radTriangle.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
+        #Феодальная раздробленность
+        radFeudalFrag = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Феодальная раздробленность (стр. 48)', value=6, variable=selected)
+        radFeudalFrag.grid(row=6, column=0, sticky="nswe", padx=10, pady=10)
+        #Империя
+        radEmpire = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Империя (стр. 48)', value=7, variable=selected)
+        radEmpire.grid(row=7, column=0, sticky="nswe", padx=10, pady=10)
+        #Гигантская компонента связности
+        radGiantConnComp = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Гигантская компонента связности', value=8, variable=selected)
+        radGiantConnComp.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
+        ##########################################
+        #    creating elements for inputFrame    #
+        ##########################################
+        txtn = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите количество вершин")
+        txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите вероятность")
+        txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Задайте C")
+        txtn.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        txtp.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        txtс.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        ############################################
+        #    creating elements for buttonsFrame    #
+        ############################################
+        btn = customtkinter.CTkButton(master=self.buttonsFrame,text="Построить граф",height=40,width=480,command=App.ERG)
+        btn.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+  
         
         
         
