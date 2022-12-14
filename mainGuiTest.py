@@ -125,9 +125,8 @@ def ERG():
         
     print(max(nx.connected_components(G)))
     plt.axis('on')
-    plt.savefig("st.png")
+    plt.savefig("st.png", dpi=150)
     plt.clf()
-    plt.subplot(212)
         
     topImg = PhotoImage(file="st.png")
     app.graphImage.configure(image=topImg)
@@ -149,15 +148,16 @@ class App(customtkinter.CTk):
     ######################################################################
     #    Setting the parameters and the class for working with colors    #
     ######################################################################
-    WIDTH = 1360
-    HEIGHT = 900
-    GRAPH_RESOLUTION = HEIGHT-100
+    GRAPH_HEIGHT = 720
+    GRAPH_WIDTH = 960
+    RIGHT_FRAME = 450
+    HEIGHT = 820
+    WIDTH = 1470
     CORNER_RADIUS = 10
     # color class
     class Colors:
         graphInfoTrue = "#84a98c"
         graphInfoFalse = "#9b2226"
-        graphBackground = "#9b2226"
     ################################################
     #    Class initialization - object creation    #
     ################################################
@@ -185,10 +185,10 @@ class App(customtkinter.CTk):
         #################################
         #    Frame window - left one    #
         #################################
-        self.L_graphFrame = customtkinter.CTkFrame(master=self.mainFrame, width=self.GRAPH_RESOLUTION+20, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
+        self.L_graphFrame = customtkinter.CTkFrame(master=self.mainFrame, width=self.GRAPH_WIDTH+20, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
         self.L_graphFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         # Зависсивые окна
-        self.graphVisualizeFrame = customtkinter.CTkFrame(master=self.L_graphFrame, width=self.GRAPH_RESOLUTION, height=self.GRAPH_RESOLUTION, corner_radius=self.CORNER_RADIUS)
+        self.graphVisualizeFrame = customtkinter.CTkFrame(master=self.L_graphFrame, width=self.GRAPH_WIDTH, height=self.GRAPH_HEIGHT, corner_radius=self.CORNER_RADIUS)
         self.graphInfoFrame = customtkinter.CTkFrame(master=self.L_graphFrame, height=60, corner_radius=self.CORNER_RADIUS)
         self.graphVisualizeFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.graphInfoFrame.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
@@ -198,9 +198,9 @@ class App(customtkinter.CTk):
         self.R_parametersFrame = customtkinter.CTkFrame(master=self.mainFrame, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
         self.R_parametersFrame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
         # Зависсивые окна
-        self.optionsFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_RESOLUTION/3, width=500, corner_radius=self.CORNER_RADIUS)
-        self.inputFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_RESOLUTION/3, width=500, corner_radius=self.CORNER_RADIUS)
-        self.buttonsFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_RESOLUTION/3, width=500, corner_radius=self.CORNER_RADIUS)
+        self.optionsFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_HEIGHT/3, width=self.RIGHT_FRAME, corner_radius=self.CORNER_RADIUS)
+        self.inputFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_HEIGHT/3, width=self.RIGHT_FRAME, corner_radius=self.CORNER_RADIUS)
+        self.buttonsFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_HEIGHT/3, width=self.RIGHT_FRAME, corner_radius=self.CORNER_RADIUS)
         self.optionsFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.inputFrame.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
         self.buttonsFrame.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
@@ -209,12 +209,12 @@ class App(customtkinter.CTk):
         ############################################
         # graph = customtkinter.CTkImage(light_image=Image.open(os.path.join("Assets/images/start.png")), dark_image=Image.open(os.path.join("Assets/images/start.png")), size=(54,54))
         graph = PIL.Image.open("Assets/Images/start.png")
-        self.graphImage = customtkinter.CTkLabel(master=self.graphVisualizeFrame, width=self.GRAPH_RESOLUTION-10, height=self.GRAPH_RESOLUTION-10,text="")
+        self.graphImage = customtkinter.CTkLabel(master=self.graphVisualizeFrame, width=self.GRAPH_WIDTH-10, height=self.GRAPH_HEIGHT-10,text="")
         self.graphImage.image = ImageTk.PhotoImage(graph)
         self.graphImage.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)
-        self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
-        self.labelPlanarity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Планарность")
-        self.labelTrianglesPresence= customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Наличие треугольников")
+        self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
+        self.labelPlanarity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Планарность")
+        self.labelTrianglesPresence= customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Наличие треугольников")
         self.labelConnectivity.grid(row=0, column=0, sticky="nswe", padx=5, pady=0)
         self.labelPlanarity.grid(row=0, column=1, sticky="nswe", padx=5, pady=0)
         self.labelTrianglesPresence.grid(row=0, column=2, sticky="nswe", padx=5, pady=0)
@@ -243,23 +243,23 @@ class App(customtkinter.CTk):
         ##########################################
         #    creating elements for inputFrame    #
         ##########################################
-        self.txtnLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="Количество вершин в графе:")
-        self.txtpLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="Вероятность появления ребер в графе:")
-        self.txtсLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="С:")
-        self.txtn = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите количество вершин")
-        self.txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите вероятность")
-        self.txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Задайте C")
-        self.txtnLabel.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
-        self.txtpLabel.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-        self.txtсLabel.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
+        # self.txtnLabel = customtkinter.CTkLabel(master=self.inputFrame,width=self.RIGHT_FRAME-20,text="Количество вершин в графе:")
+        # self.txtpLabel = customtkinter.CTkLabel(master=self.inputFrame,width=self.RIGHT_FRAME-20,text="Вероятность появления ребер в графе:")
+        # self.txtсLabel = customtkinter.CTkLabel(master=self.inputFrame,width=self.RIGHT_FRAME-20,text="С:")
+        self.txtn = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=self.RIGHT_FRAME-20,placeholder_text="Введите количество вершин")
+        self.txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=self.RIGHT_FRAME-20,placeholder_text="Введите вероятность")
+        self.txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=self.RIGHT_FRAME-20,placeholder_text="Задайте C")
+        # self.txtnLabel.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        # self.txtpLabel.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        # self.txtсLabel.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
         self.txtn.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
         self.txtp.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
         self.txtс.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
         ############################################
         #    creating elements for buttonsFrame    #
         ############################################
-        self.btnCreate = customtkinter.CTkButton(master=self.buttonsFrame,text="Построить граф",height=40,width=480,command=ERG)
-        self.btnSave = customtkinter.CTkButton(master=self.buttonsFrame,text="Сохранить изображение графа",height=40,width=480)
+        self.btnCreate = customtkinter.CTkButton(master=self.buttonsFrame,text="Построить граф",height=40,width=self.RIGHT_FRAME-20,command=ERG)
+        self.btnSave = customtkinter.CTkButton(master=self.buttonsFrame,text="Сохранить изображение графа",height=40,width=self.RIGHT_FRAME-20)
         self.btnCreate.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.btnSave.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
         
