@@ -20,6 +20,128 @@ from PIL import Image, ImageTk
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
+#  Algorithm
+#################################################################################################################################################################################
+#################################################################################################################################################################################
+
+def ERG():
+    BV=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    E=[]
+    val_map = {}
+    n=int(app.txtn.get()) 
+    us = app.selected.get()
+    print(us)
+    if (us==1):
+        p=float(app.txtp.get())
+        app.txtс.delete(0, END)
+        app.txtс.insert(0,'c')
+    elif (us==2):
+        c=float(app.txtс.get())
+        p=c*(math.log(n)/n)
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==3):
+        c=float(app.txtс.get())
+        p=c/n
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==4):
+        w=n/math.log(n)
+        p=w/n
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==5):
+        a=1/n
+        p=a/n
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==6):
+        p=1/(n**3)
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==7):
+        p=n*math.log(n)/n
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==8):
+        p=float(txtp.get())
+        app.txtс.delete(0, END)
+        app.txtс.insert(0,'c')
+
+    V=[]
+    for i in range(n*(n-1)//2):
+        E.append([])
+
+    for i in range (n):
+        V.append(BV[i])
+        val_map[BV[i]]=1.0
+    m=0
+
+    for i in range(n):
+        for j in range(i+1, len(V)):
+            E[m].append(V[i])
+            E[m].append(V[j])
+            m+=1
+    
+    G = nx.Graph()
+    G.add_nodes_from(V)
+    for i in range (n*(n-1)//2):
+        k=random.randint(0,1000)/1000
+        if (k<=p):
+            G.add_edge(E[i][0],E[i][1])    
+    
+    if (us==4):
+        all_cliques= nx.enumerate_all_cliques(G)
+        triad_cliques=[x for x in all_cliques if len(x)==3 ]
+        if (len(triad_cliques)!=0):
+            for v in triad_cliques[0]:
+                val_map[v]=0.1
+            
+    
+    all_cliques= nx.enumerate_all_cliques(G)
+    if triad_cliques := [x for x in all_cliques if len(x) == 3]:
+        app.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoTrue)
+    else:
+        app.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoFalse)
+
+    if (us==8):
+        for v in (max(nx.connected_components(G))):
+            val_map[v]=0.1 
+
+    values = [val_map.get(node, 0.25) for node in G.nodes()]
+
+    plt.clf()
+    if (nx.check_planarity(G, counterexample=False)[0]==True):
+        nx.draw_planar(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
+        app.labelPlanarity.configure(fg_color=App.Colors.graphInfoTrue)
+    else:
+        nx.draw_circular(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
+        app.labelPlanarity.configure(fg_color=App.Colors.graphInfoFalse)
+
+    if (nx.is_connected(G)):
+        app.labelConnectivity.configure(fg_color=App.Colors.graphInfoTrue)
+    else:
+        app.labelConnectivity.configure(fg_color=App.Colors.graphInfoFalse)
+        
+    print(max(nx.connected_components(G)))
+    plt.axis('on')
+    plt.savefig("st.png")
+    plt.clf()
+    plt.subplot(212)
+        
+    topImg = PhotoImage(file="st.png")
+    app.graphImage.configure(image=topImg)
+    app.graphImage.image = topImg
+
+    # topImg = PhotoImage(file="st.png")
+    # topImg = customtkinter.CTkImage(light_image=Image.open(os.path("st.png")), dark_image=Image.open(os.path.join(App.PIECE_DIR, 'bB.png')), size=(App.GRAPH_RESOLUTION,App.GRAPH_RESOLUTION))
+    # app.graphImage.configure(image=topImg)
+    # app.graphImage.image = topImg
+    
+    
+    
+#################################################################################################################################################################################
+#################################################################################################################################################################################
 #  Setting initial main window parameters
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -35,119 +157,7 @@ class App(customtkinter.CTk):
     class Colors:
         graphInfoTrue = "#84a98c"
         graphInfoFalse = "#9b2226"
-          
-    #################################################################################################################################################################################
-    #################################################################################################################################################################################
-    #  Algorithm
-    #################################################################################################################################################################################
-    #################################################################################################################################################################################
-    def ERG():
-        BV=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-        E=[]
-        val_map = {}
-        n=int(App.txtn.get()) 
-        us = App.selected.get()
-        print(us)
-        if (us==1):
-            p=float(App.txtp.get())
-            App.txtс.delete(0, END)
-            App.txtс.insert(0,'c')
-        elif (us==2):
-            c=float(App.txtс.get())
-            p=c*(math.log(n)/n)
-            App.txtp.delete(first=0,last=END)
-            App.txtp.insert(0, str(p))
-        elif (us==3):
-            c=float(App.txtс.get())
-            p=c/n
-            App.txtp.delete(first=0,last=END)
-            App.txtp.insert(0, str(p))
-        elif (us==4):
-            w=n/math.log(n)
-            p=w/n
-            App.txtp.delete(first=0,last=END)
-            App.txtp.insert(0, str(p))
-        elif (us==5):
-            a=1/n
-            p=a/n
-            App.txtp.delete(first=0,last=END)
-            App.txtp.insert(0, str(p))
-        elif (us==6):
-            p=1/(n**3)
-            App.txtp.delete(first=0,last=END)
-            App.txtp.insert(0, str(p))
-        elif (us==7):
-            p=n*math.log(n)/n
-            App.txtp.delete(first=0,last=END)
-            App.txtp.insert(0, str(p))
-        elif (us==8):
-            p=float(App.txtp.get())
-            App.txtс.delete(0, END)
-            App.txtс.insert(0,'c')
-
-        V=[]
-        for i in range(n*(n-1)//2):
-            E.append([])
-
-        for i in range (n):
-            V.append(BV[i])
-            val_map[BV[i]]=1.0
-        m=0
-
-        for i in range(n):
-            for j in range(i+1, len(V)):
-                E[m].append(V[i])
-                E[m].append(V[j])
-                m+=1
-        
-        G = nx.Graph()
-        G.add_nodes_from(V)
-        for i in range (n*(n-1)//2):
-            k=random.randint(0,1000)/1000
-            if (k<=p):
-                G.add_edge(E[i][0],E[i][1])    
-        
-        if (us==4):
-            all_cliques= nx.enumerate_all_cliques(G)
-            triad_cliques=[x for x in all_cliques if len(x)==3 ]
-            if (len(triad_cliques)!=0):
-                for v in triad_cliques[0]:
-                    val_map[v]=0.1
-                
-        all_cliques= nx.enumerate_all_cliques(G)
-        triad_cliques=[x for x in all_cliques if len(x)==3 ]
-        if (len(triad_cliques)!=0):
-            App.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoTrue)
-        else:
-            App.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoFalse)
-
-        if (us==8):
-            for v in (max(nx.connected_components(G))):
-                val_map[v]=0.1 
-
-        values = [val_map.get(node, 0.25) for node in G.nodes()]
-        
-        plt.clf()
-        if (nx.check_planarity(G, counterexample=False)[0]==True):
-            nx.draw_planar(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
-            App.labelPlanarity.configure(fg_color=App.Colors.graphInfoTrue)
-        else:
-            nx.draw_circular(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
-            App.labelPlanarity.configure(fg_color=App.Colors.graphInfoFalse)
-
-        if (nx.is_connected(G)):
-            App.labelConnectivity.configure(fg_color=App.Colors.graphInfoTrue)
-        else:
-            App.labelConnectivity.configure(fg_color=App.Colors.graphInfoFalse)
-        print(max(nx.connected_components(G)))
-        plt.axis('on')
-        # plt.savefig("saved-graph.png")
-        plt.clf()
-            
-        topImg = PhotoImage(file="st.png")
-        App.graphImage.configure(image=topImg)
-        App.graphImage.image = topImg
-
+        graphBackground = "#9b2226"
     ################################################
     #    Class initialization - object creation    #
     ################################################
@@ -159,7 +169,6 @@ class App(customtkinter.CTk):
         customtkinter.set_default_color_theme("blue")
         self.resizable(False, False)
         self.title("Модель случайного графа Эрдёша-Реньи")
-        self.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.geometry(f"{App.WIDTH+20}x{App.HEIGHT+20}")
         # Настройка макета сетки (1x2)
         self.grid_columnconfigure(1, weight=1)
@@ -199,8 +208,8 @@ class App(customtkinter.CTk):
         #    creating elements for L_graphFrame    #
         ############################################
         # graph = customtkinter.CTkImage(light_image=Image.open(os.path.join("Assets/images/start.png")), dark_image=Image.open(os.path.join("Assets/images/start.png")), size=(54,54))
-        graph = PIL.Image.open("Assets/images/start.png")
-        self.graphImage = customtkinter.CTkCanvas(master=self.graphVisualizeFrame, width=self.GRAPH_RESOLUTION-10, height=self.GRAPH_RESOLUTION-10,background="Black")
+        graph = PIL.Image.open("Assets/Images/start.png")
+        self.graphImage = customtkinter.CTkLabel(master=self.graphVisualizeFrame, width=self.GRAPH_RESOLUTION-10, height=self.GRAPH_RESOLUTION-10,text="")
         self.graphImage.image = ImageTk.PhotoImage(graph)
         self.graphImage.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)
         self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
@@ -212,56 +221,47 @@ class App(customtkinter.CTk):
         ############################################
         #    creating elements for optionsFrame    #
         ############################################
-        selected = IntVar()
-        labedRad = customtkinter.CTkLabel(master=self.optionsFrame,text='Способы задания графа:')
-        labedRad.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
-        #Вероятностный граф
-        radProbability = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Вероятностный граф', value=1, variable=selected)
-        radProbability.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-        #Связность графа
-        radConnectivity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Связность (теорема 13)', value=2, variable=selected)
-        radConnectivity.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-        #Планарность графа
-        radPlanarity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Планарность (теорема 26)', value=3, variable=selected)
-        radPlanarity.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
-        #Присутствие треугольников
-        radNonTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Присутствие треугольников (теорема 12)', value=4, variable=selected)
-        radNonTriangle.grid(row=4, column=0, sticky="nswe", padx=10, pady=10)
-        #Отсутсвие треугольников
-        radTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Отсутствие треугольников (теорема 10)', value=5, variable=selected)
-        radTriangle.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
-        #Феодальная раздробленность
-        radFeudalFrag = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Феодальная раздробленность (стр. 48)', value=6, variable=selected)
-        radFeudalFrag.grid(row=6, column=0, sticky="nswe", padx=10, pady=10)
-        #Империя
-        radEmpire = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Империя (стр. 48)', value=7, variable=selected)
-        radEmpire.grid(row=7, column=0, sticky="nswe", padx=10, pady=10)
-        #Гигантская компонента связности
-        radGiantConnComp = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Гигантская компонента связности', value=8, variable=selected)
-        radGiantConnComp.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
+        self.selected = IntVar()
+        self.labedRad = customtkinter.CTkLabel(master=self.optionsFrame,text='Способы задания графа:')
+        self.radProbability = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Вероятностный граф', value=1, variable=self.selected)
+        self.radConnectivity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Связность (теорема 13)', value=2, variable=self.selected)
+        self.radPlanarity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Планарность (теорема 26)', value=3, variable=self.selected)
+        self.radNonTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Присутствие треугольников (теорема 12)', value=4, variable=self.selected)
+        self.radTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Отсутствие треугольников (теорема 10)', value=5, variable=self.selected)
+        self.radFeudalFrag = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Феодальная раздробленность (стр. 48)', value=6, variable=self.selected)
+        self.radEmpire = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Империя (стр. 48)', value=7, variable=self.selected)
+        self.radGiantConnComp = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Гигантская компонента связности', value=8, variable=self.selected)
+        self.labedRad.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.radProbability.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        self.radConnectivity.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        self.radPlanarity.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
+        self.radNonTriangle.grid(row=4, column=0, sticky="nswe", padx=10, pady=10)
+        self.radTriangle.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
+        self.radFeudalFrag.grid(row=6, column=0, sticky="nswe", padx=10, pady=10)
+        self.radEmpire.grid(row=7, column=0, sticky="nswe", padx=10, pady=10)
+        self.radGiantConnComp.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
         ##########################################
         #    creating elements for inputFrame    #
         ##########################################
-        txtnLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="Количество вершин в графе:")
-        txtpLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="Вероятность появления ребер в графе:")
-        txtсLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="С:")
-        txtn = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите количество вершин")
-        txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите вероятность")
-        txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Задайте C")
-        txtnLabel.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
-        txtpLabel.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-        txtсLabel.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
-        txtn.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-        txtp.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
-        txtс.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtnLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="Количество вершин в графе:")
+        self.txtpLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="Вероятность появления ребер в графе:")
+        self.txtсLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="С:")
+        self.txtn = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите количество вершин")
+        self.txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите вероятность")
+        self.txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Задайте C")
+        self.txtnLabel.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtpLabel.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtсLabel.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
+        self.txtn.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtp.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtс.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
         ############################################
         #    creating elements for buttonsFrame    #
         ############################################
-        btnCreate = customtkinter.CTkButton(master=self.buttonsFrame,text="Построить граф",height=40,width=480,command=App.ERG)
-        btnSave = customtkinter.CTkButton(master=self.buttonsFrame,text="Сохранить изображение графа",height=40,width=480,command=App.ERG)
-        btnCreate.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
-        btnSave.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-  
+        self.btnCreate = customtkinter.CTkButton(master=self.buttonsFrame,text="Построить граф",height=40,width=480,command=ERG)
+        self.btnSave = customtkinter.CTkButton(master=self.buttonsFrame,text="Сохранить изображение графа",height=40,width=480)
+        self.btnCreate.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.btnSave.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
         
         
         
@@ -269,11 +269,11 @@ class App(customtkinter.CTk):
     #########################################################
     #    cleaning the window and exiting the application    #
     #########################################################
-    def on_closing(self, event=0):
-        self.destroy()
     def start(self):
         self.mainloop()
-
+ 
+        
+        
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #   Program initialization
