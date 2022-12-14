@@ -201,7 +201,7 @@ class App(customtkinter.CTk):
         # graph = customtkinter.CTkImage(light_image=Image.open(os.path.join("Assets/images/start.png")), dark_image=Image.open(os.path.join("Assets/images/start.png")), size=(54,54))
         graph = PIL.Image.open("Assets/images/start.png")
         self.graphImage = customtkinter.CTkCanvas(master=self.graphVisualizeFrame, width=self.GRAPH_RESOLUTION-10, height=self.GRAPH_RESOLUTION-10,background="Black")
-        self.graphImage.image = ImageTk.PhotoImage(graph) 
+        self.graphImage.image = ImageTk.PhotoImage(graph)
         self.graphImage.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)
         self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
         self.labelPlanarity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Планарность")
@@ -242,17 +242,25 @@ class App(customtkinter.CTk):
         ##########################################
         #    creating elements for inputFrame    #
         ##########################################
+        txtnLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="Количество вершин в графе:")
+        txtpLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="Вероятность появления ребер в графе:")
+        txtсLabel = customtkinter.CTkLabel(master=self.inputFrame,width=480,text="С:")
         txtn = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите количество вершин")
         txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите вероятность")
         txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Задайте C")
-        txtn.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
-        txtp.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-        txtс.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        txtnLabel.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        txtpLabel.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        txtсLabel.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
+        txtn.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        txtp.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
+        txtс.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
         ############################################
         #    creating elements for buttonsFrame    #
         ############################################
-        btn = customtkinter.CTkButton(master=self.buttonsFrame,text="Построить граф",height=40,width=480,command=App.ERG)
-        btn.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        btnCreate = customtkinter.CTkButton(master=self.buttonsFrame,text="Построить граф",height=40,width=480,command=App.ERG)
+        btnSave = customtkinter.CTkButton(master=self.buttonsFrame,text="Сохранить изображение графа",height=40,width=480,command=App.ERG)
+        btnCreate.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        btnSave.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
   
         
         
