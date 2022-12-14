@@ -1,0 +1,8 @@
+.idea/*
+.dist/*
+.venv/*
+.vscode/*
+__pycache__/*
+Test/__pycache__/*
+
+st.png
