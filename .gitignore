@@ -1,0 +1,7 @@
+.idea/*
+.venv/*
+.vscode/*
+__pycache__/*
+Test/__pycache__/*
+
+saved-graph.png
