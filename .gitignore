@@ -1,7 +1,8 @@
 .idea/*
+.dist/*
 .venv/*
 .vscode/*
 __pycache__/*
 Test/__pycache__/*
 
-saved-graph.png
+st.png
