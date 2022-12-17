@@ -17,99 +17,88 @@ from types import CellType
 from tkinter.ttk import Checkbutton
 from PIL import Image, ImageTk
 
-
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #  Algorithm
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-
 def ERG():
     BV=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-    E=[]
+    Edges=[]
     val_map = {}
-    n=int(app.txtn.get()) 
+    n = int(app.txtn.get()) 
     us = app.selected.get()
     print(us)
-    if (us==1):
-        p=float(app.txtp.get())
+    if (us==1): # Вероятностный граф
+        # p=float(app.txtp.get())
+        p=app.slip.valiable
         app.txtс.delete(0, END)
         app.txtс.insert(0,'c')
-    elif (us==2):
+    elif (us==2): # Связность (теорема 13)
         c=float(app.txtс.get())
         p=c*(math.log(n)/n)
-        app.txtp.delete(first=0,last=END)
+        # app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==3):
+    elif (us==3): # Планарность (теорема 26)
         c=float(app.txtс.get())
         p=c/n
         app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==4):
+    elif (us==4): # Присутствие треугольников (теорема 12)
         w=n/math.log(n)
         p=w/n
         app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==5):
+    elif (us==5): # Отсутствие треугольников (теорема 10)
         a=1/n
         p=a/n
         app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==6):
+    elif (us==6): # Феодальная раздробленность (стр. 48)
         p=1/(n**3)
         app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==7):
+    elif (us==7): # Империя (стр. 48)
         p=n*math.log(n)/n
         app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==8):
-        p=float(txtp.get())
+    elif (us==8): # Гигантская компонента связности
+        p=float(app.txtp.get())
         app.txtс.delete(0, END)
         app.txtс.insert(0,'c')
-
     V=[]
     for i in range(n*(n-1)//2):
-        E.append([])
-
+        Edges.append([])
     for i in range (n):
         V.append(BV[i])
         val_map[BV[i]]=1.0
     m=0
-
     for i in range(n):
         for j in range(i+1, len(V)):
-            E[m].append(V[i])
-            E[m].append(V[j])
+            Edges[m].append(V[i])
+            Edges[m].append(V[j])
             m+=1
-    
     G = nx.Graph()
     G.add_nodes_from(V)
     for i in range (n*(n-1)//2):
         k=random.randint(0,1000)/1000
         if (k<=p):
-            G.add_edge(E[i][0],E[i][1])    
-    
+            G.add_edge(Edges[i][0],Edges[i][1])
     if (us==4):
         all_cliques= nx.enumerate_all_cliques(G)
         triad_cliques=[x for x in all_cliques if len(x)==3 ]
         if (len(triad_cliques)!=0):
             for v in triad_cliques[0]:
                 val_map[v]=0.1
-            
-    
     all_cliques= nx.enumerate_all_cliques(G)
     if triad_cliques := [x for x in all_cliques if len(x) == 3]:
         app.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoTrue)
     else:
         app.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoFalse)
-
     if (us==8):
         for v in (max(nx.connected_components(G))):
             val_map[v]=0.1 
-
     values = [val_map.get(node, 0.25) for node in G.nodes()]
-
     plt.clf()
     if (nx.check_planarity(G, counterexample=False)[0]==True):
         nx.draw_planar(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
@@ -117,27 +106,17 @@ def ERG():
     else:
         nx.draw_circular(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
         app.labelPlanarity.configure(fg_color=App.Colors.graphInfoFalse)
-
     if (nx.is_connected(G)):
         app.labelConnectivity.configure(fg_color=App.Colors.graphInfoTrue)
     else:
         app.labelConnectivity.configure(fg_color=App.Colors.graphInfoFalse)
-        
     print(max(nx.connected_components(G)))
     plt.axis('on')
     plt.savefig("st.png", dpi=150)
     plt.clf()
-        
     topImg = PhotoImage(file="st.png")
     app.graphImage.configure(image=topImg)
     app.graphImage.image = topImg
-
-    # topImg = PhotoImage(file="st.png")
-    # topImg = customtkinter.CTkImage(light_image=Image.open(os.path("st.png")), dark_image=Image.open(os.path.join(App.PIECE_DIR, 'bB.png')), size=(App.GRAPH_RESOLUTION,App.GRAPH_RESOLUTION))
-    # app.graphImage.configure(image=topImg)
-    # app.graphImage.image = topImg
-    
-    
     
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -211,13 +190,17 @@ class App(customtkinter.CTk):
         graph = PIL.Image.open("Assets/Images/start.png")
         self.graphImage = customtkinter.CTkLabel(master=self.graphVisualizeFrame, width=self.GRAPH_WIDTH-10, height=self.GRAPH_HEIGHT-10,text="")
         self.graphImage.image = ImageTk.PhotoImage(graph)
-        self.graphImage.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)
         self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
         self.labelPlanarity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Планарность")
         self.labelTrianglesPresence= customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Наличие треугольников")
-        self.labelConnectivity.grid(row=0, column=0, sticky="nswe", padx=5, pady=0)
-        self.labelPlanarity.grid(row=0, column=1, sticky="nswe", padx=5, pady=0)
-        self.labelTrianglesPresence.grid(row=0, column=2, sticky="nswe", padx=5, pady=0)
+        self.graphImage.grid(
+            row=0, column=0, sticky="nswe", padx=0, pady=0)
+        self.labelConnectivity.grid(
+            row=0, column=0, sticky="nswe", padx=5, pady=0)
+        self.labelPlanarity.grid(
+            row=0, column=1, sticky="nswe", padx=5, pady=0)
+        self.labelTrianglesPresence.grid(
+            row=0, column=2, sticky="nswe", padx=5, pady=0)
         ############################################
         #    creating elements for optionsFrame    #
         ############################################
@@ -243,17 +226,19 @@ class App(customtkinter.CTk):
         ##########################################
         #    creating elements for inputFrame    #
         ##########################################
-        # self.txtnLabel = customtkinter.CTkLabel(master=self.inputFrame,width=self.RIGHT_FRAME-20,text="Количество вершин в графе:")
-        # self.txtpLabel = customtkinter.CTkLabel(master=self.inputFrame,width=self.RIGHT_FRAME-20,text="Вероятность появления ребер в графе:")
-        # self.txtсLabel = customtkinter.CTkLabel(master=self.inputFrame,width=self.RIGHT_FRAME-20,text="С:")
+        self.txtnLabel = customtkinter.CTkLabel(master=self.inputFrame,width=self.RIGHT_FRAME-20,text="Количество вершин в графе:")
+        self.txtpLabel = customtkinter.CTkLabel(master=self.inputFrame,width=self.RIGHT_FRAME-20,text="Вероятность появления ребер в графе:")
+        self.txtсLabel = customtkinter.CTkLabel(master=self.inputFrame,width=self.RIGHT_FRAME-20,text="Константа С:")
         self.txtn = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=self.RIGHT_FRAME-20,placeholder_text="Введите количество вершин")
-        self.txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=self.RIGHT_FRAME-20,placeholder_text="Введите вероятность")
-        self.txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=self.RIGHT_FRAME-20,placeholder_text="Задайте C")
-        # self.txtnLabel.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
-        # self.txtpLabel.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-        # self.txtсLabel.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
+        # self.txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=self.RIGHT_FRAME-20,placeholder_text="Введите вероятность")
+        self.slip = customtkinter.CTkSlider(master=self.inputFrame, from_=0, to=1, number_of_steps=100, variable=0.5)
+        self.txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=self.RIGHT_FRAME-20,placeholder_text="Задайте константу C")
+        self.txtnLabel.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtpLabel.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtсLabel.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
         self.txtn.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-        self.txtp.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
+        # self.txtp.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
+        self.slip.grid(row=3, column=0, padx=(20, 10), pady=(10, 10), sticky="ew")
         self.txtс.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
         ############################################
         #    creating elements for buttonsFrame    #
@@ -262,7 +247,6 @@ class App(customtkinter.CTk):
         self.btnSave = customtkinter.CTkButton(master=self.buttonsFrame,text="Сохранить изображение графа",height=40,width=self.RIGHT_FRAME-20)
         self.btnCreate.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.btnSave.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-        
         
         
         
