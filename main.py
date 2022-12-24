@@ -1,238 +1,120 @@
-import random
-import networkx as nx
-import matplotlib.pyplot as plt
-from tkinter import *
-from PIL import ImageTk, Image
-import shutil
-from tkinter.ttk import Checkbutton
-import math
+import tkinter
 
-def ERG():
-    BV=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-    E=[]
-    val_map = {}
-    n=int(txtn.get()) 
-    us =selected.get()
-    print(us)
-    if (us==1):
-        p=float(txtp.get())
-        txtс.delete(0, END)
-        txtс.insert(0,'c')
-    elif (us==2):
-        c=float(txtс.get())
-        p=c*(math.log(n)/n)
-        txtp.delete(first=0,last=END)
-        txtp.insert(0, str(p))
-    elif (us==3):
-        c=float(txtс.get())
-        p=c/n
-        txtp.delete(first=0,last=END)
-        txtp.insert(0, str(p))
-    elif (us==4):
-        w=n/math.log(n)
-        p=w/n
-        txtp.delete(first=0,last=END)
-        txtp.insert(0, str(p))
-    elif (us==5):
-        a=1/n
-        p=a/n
-        txtp.delete(first=0,last=END)
-        txtp.insert(0, str(p))
-    elif (us==6):
-        p=1/(n**3)
-        txtp.delete(first=0,last=END)
-        txtp.insert(0, str(p))
-    elif (us==7):
-        p=n*math.log(n)/n
-        txtp.delete(first=0,last=END)
-        txtp.insert(0, str(p))
-    elif (us==8):
-        p=float(txtp.get())
-        txtс.delete(0, END)
-        txtс.insert(0,'c')
+import customtkinter
+import os
+from PIL import Image
 
-    V=[]
-    for i in range(n*(n-1)//2):
-        E.append([])
 
-    for i in range (n):
-        V.append(BV[i])
-        val_map[BV[i]]=1.0
-    m=0
+class App(customtkinter.CTk):
+    def __init__(self):
+        super().__init__()
 
-    for i in range(n):
-        for j in range(i+1, len(V)):
-            E[m].append(V[i])
-            E[m].append(V[j])
-            m+=1
-    
-    G = nx.Graph()
-    G.add_nodes_from(V)
-    for i in range (n*(n-1)//2):
-        k=random.randint(0,1000)/1000
-        if (k<=p):
-            G.add_edge(E[i][0],E[i][1])    
-    
-    if (us==4):
-        all_cliques= nx.enumerate_all_cliques(G)
-        triad_cliques=[x for x in all_cliques if len(x)==3 ]
-        if (len(triad_cliques)!=0):
-            for v in triad_cliques[0]:
-                val_map[v]=0.1
-            
-    all_cliques= nx.enumerate_all_cliques(G)
-    triad_cliques=[x for x in all_cliques if len(x)==3 ]
-    if (len(triad_cliques)!=0):
-        lbl3.configure(text='+', foreground='#008000')
-    else:
-        lbl3.configure(text='-', foreground='#ff0000')
+        self.resizable(False, False)
+        self.title("Модели случайных графов")
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+        self.geometry("1470x820")
 
-    if (us==8):
-        for v in (max(nx.connected_components(G))):
-            val_map[v]=0.1 
+        # set grid layout 1x2
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
 
-    values = [val_map.get(node, 0.25) for node in G.nodes()]
-    
-    plt.clf()
-    if (nx.check_planarity(G, counterexample=False)[0]==True):
-        nx.draw_planar(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
-        lbl2.configure(text="+", foreground='#008000')
-    else:
-        nx.draw_circular(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
-        lbl2.configure(text="-", foreground='#ff0000')
+        # load images with light and dark mode image
+        pathImages = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Assets/Images")
+        pathIcons = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Assets/Icons")   
+        self.imageLogo = customtkinter.CTkImage(Image.open(os.path.join(pathIcons, "Leti_logo.png")), size=(32, 32))
+        self.imageERG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BG_Barabasi_Albert.png")), size=(500, 300))
+        self.imageBAG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BG_Barabasi_Albert.png")), size=(500, 300))
+        self.imageBRG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BG_Barabasi_Albert.png")), size=(500, 300))
+        self.menuImageERG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BG_Barabasi_Albert.png")), size=(24, 24))
+        self.menuImageBAG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BG_Barabasi_Albert.png")), size=(24, 24))
+        self.menuImageBRG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BG_Barabasi_Albert.png")), size=(24, 24))
 
-    if (nx.is_connected(G)):
-        lbl1.configure(text="+", foreground='#008000')
-    else:
-        lbl1.configure(text="-", foreground='#ff0000')
-    print(max(nx.connected_components(G)))
-    plt.axis('on')
-    plt.savefig("st.png")
-    plt.clf()
-        
-    topImg = PhotoImage(file="st.png")
-    panel.configure(image=topImg)
-    panel.image = topImg
+        #################################
+        #    create navigation frame    #
+        #################################
+        self.navigation_frame = customtkinter.CTkFrame(self, corner_radius=0)
+        self.navigation_frame.grid(row=0, column=0, sticky="nsew")
+        self.navigation_frame.grid_rowconfigure(4, weight=1)
+        self.navigation_frame_label = customtkinter.CTkLabel(self.navigation_frame, text="  Модели случайных графов", image=self.imageLogo, compound="left", font=customtkinter.CTkFont(size=15, weight="bold"))
+        self.navigation_frame_label.grid(row=0, column=0, padx=20, pady=20)
+        self.MenuButtonERG = customtkinter.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Home", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), image=self.imageERG, anchor="w", command=self.MenuButtonERG_event)
+        self.MenuButtonERG.grid(row=1, column=0, sticky="ew")
+        self.MenuButtonBAG = customtkinter.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Frame 2", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), image=self.imageERG, anchor="w", command=self.MenuButtonBAG_event)
+        self.MenuButtonBAG.grid(row=2, column=0, sticky="ew")
+        self.MenuButtonBRG = customtkinter.CTkButton(self.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Frame 3", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), image=self.imageERG, anchor="w", command=self.MenuButtonBRG_event)
+        self.MenuButtonBRG.grid(row=3, column=0, sticky="ew")
+        self.appearance_mode_menu = customtkinter.CTkOptionMenu(self.navigation_frame, values=["Light", "Dark", "System"], command=self.change_appearance_mode_event)
+        self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
-root = Tk()
-colors={"bgr":'#2F4F4F', 'bfr': '#696969', 'bfr1' : '#808080', 'bent':'#C0C0C0'}
-root.title("Модель случайного графа Эрдёша-Реньи")
-root["bg"] = colors['bgr']
-root.geometry('1000x800')
+        ##########################
+        #    create ERG frame    #
+        ##########################
+        self.FrameERG = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
+        self.FrameERG.grid_columnconfigure(0, weight=1)
 
-selected = IntVar()
+        self.FrameERG_large_image_label = customtkinter.CTkLabel(self.FrameERG, text="", image=self.imageERG)
+        self.FrameERG_large_image_label.grid(row=0, column=0, padx=20, pady=10)
 
-frame1 = LabelFrame(text="изображение графа", width=640, height=480, background=colors['bfr1'],foreground='#ffffff', font='Arial 12 bold')
-frame2 = LabelFrame(text="способы работы", width=400, height=280, background=colors['bfr1'],foreground='#ffffff', font='Arial 12 bold')
-frame3 = LabelFrame(text="ввод значений", width=400, height=180, background=colors['bfr1'],foreground='#ffffff', font='Arial 12 bold')
-frame4 = LabelFrame(text="свойства графа", width=250, height=180, background=colors['bfr1'],foreground='#ffffff', font='Arial 12 bold')
+        self.FrameERG_button_1 = customtkinter.CTkButton(self.FrameERG, text="", image=self.imageERG)
+        self.FrameERG_button_1.grid(row=1, column=0, padx=20, pady=10)
+        self.FrameERG_button_2 = customtkinter.CTkButton(self.FrameERG, text="CTkButton", image=self.imageERG, compound="right")
+        self.FrameERG_button_2.grid(row=2, column=0, padx=20, pady=10)
+        self.FrameERG_button_3 = customtkinter.CTkButton(self.FrameERG, text="CTkButton", image=self.imageERG, compound="top")
+        self.FrameERG_button_3.grid(row=3, column=0, padx=20, pady=10)
+        self.FrameERG_button_4 = customtkinter.CTkButton(self.FrameERG, text="CTkButton", image=self.imageERG, compound="bottom", anchor="w")
+        self.FrameERG_button_4.grid(row=4, column=0, padx=20, pady=10)
 
-frame1.place(x=5, y=5)
-frame4.place(x=670, y=0)
-frame3.place(x=420, y=600)
-frame2.place(x=5, y=500)
+        ##########################
+        #    create BAG frame    #
+        ##########################
+        self.second_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
 
-frame31 = LabelFrame(frame3, width=350, height=30, background=colors['bfr'])
-frame32 = LabelFrame(frame3, width=350, height=30, background=colors['bfr'])
-frame33 = LabelFrame(frame3, width=350, height=30, background=colors['bfr'])
+        ##########################
+        #    create BRG frame    #
+        ##########################
+        self.third_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
 
-frame41 = LabelFrame(frame4, width=220, height=30, background=colors['bfr'])
-frame42 = LabelFrame(frame4, width=220, height=30, background=colors['bfr'])
-frame43 = LabelFrame(frame4, width=220, height=30, background=colors['bfr'])
+        # select default frame
+        self.select_frame_by_name("home")
 
-frame41.place(x=10, y=10)
-frame42.place(x=10, y=60)
-frame43.place(x=10, y=110)
+    def select_frame_by_name(self, name):
+        # set button color for selected button
+        self.MenuButtonERG.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
+        self.MenuButtonBAG.configure(fg_color=("gray75", "gray25") if name == "frame_2" else "transparent")
+        self.MenuButtonBRG.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
 
-frame31.place(x=10, y=10)
-frame32.place(x=10, y=60)
-frame33.place(x=10, y=110)
+        # show selected frame
+        if name == "home":
+            self.FrameERG.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.FrameERG.grid_forget()
+        if name == "frame_2":
+            self.second_frame.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.second_frame.grid_forget()
+        if name == "frame_3":
+            self.third_frame.grid(row=0, column=1, sticky="nsew")
+        else:
+            self.third_frame.grid_forget()
 
-#Количество вершин
-lbl = Label(frame31, text="колво вершин:", font='Arial 10 bold', background=colors['bfr'],foreground='#ffffff')
-lbl.place(x=0, y=0)
-txtn = Entry(frame31, width=40, background=colors['bent'])
-txtn.place(x=100, y=2)
+    def MenuButtonERG_event(self):
+        self.select_frame_by_name("home")
 
-#вероятность p
-txtp = Entry(frame32,width=40, background=colors['bent'])
-txtp.place(x=100, y=2)
-lblp = Label(frame32, text="вероятность:", font='Arial 10 bold', background=colors['bfr'],foreground='#ffffff')
-lblp.place(x=0, y=0)
+    def MenuButtonBAG_event(self):
+        self.select_frame_by_name("frame_2")
 
-#задать с
-txtс = Entry(frame33,width=40, background=colors['bent'])
-txtс.place(x=100, y=2)
-lblс = Label(frame33, text="с: ", font='Arial 10 bold', background=colors['bfr'],foreground='#ffffff')
-lblс.place(x=0, y=0)
+    def MenuButtonBRG_event(self):
+        self.select_frame_by_name("frame_3")
 
-frame21 = LabelFrame(frame2, width=350, height=30, background=colors['bfr'])
-frame22 = LabelFrame(frame2, width=350, height=30, background=colors['bfr'])
-frame23 = LabelFrame(frame2, width=350, height=30, background=colors['bfr'])
-frame24 = LabelFrame(frame2, width=350, height=30, background=colors['bfr'])
-frame25 = LabelFrame(frame2, width=350, height=30, background=colors['bfr'])
-frame26 = LabelFrame(frame2, width=350, height=30, background=colors['bfr'])
-frame27 = LabelFrame(frame2, width=350, height=30, background=colors['bfr'])
-frame28 = LabelFrame(frame2, width=350, height=30, background=colors['bfr'])
+    def change_appearance_mode_event(self, new_appearance_mode):
+        customtkinter.set_appearance_mode(new_appearance_mode)
 
-frame21.place(x=10, y=10)
-frame22.place(x=10, y=40)
-frame23.place(x=10, y=70)
-frame24.place(x=10, y=100)
-frame25.place(x=10, y=130)
-frame26.place(x=10, y=160)
-frame27.place(x=10, y=190)
-frame28.place(x=10, y=220)
+    def on_closing(self, event=0):
+        self.destroy()
 
-rad1 = Radiobutton(frame21,text='задать вероятность', value=1, variable=selected, background=colors['bfr'],foreground='#ffffff', font='Arial 10 bold')
-rad1.place(x=5, y=0)
 
-#Связность графа
-rad2 = Radiobutton(frame22,text='связность(теорема 13)', value=2, variable=selected, background=colors['bfr'],foreground='#ffffff', font='Arial 10 bold')
-rad2.place(x=5, y=0) 
 
-#Планарность графа
-rad3 = Radiobutton(frame23,text='планарность(теорема 26)', value=3, variable=selected, background=colors['bfr'],foreground='#ffffff', font='Arial 10 bold')
-rad3.place(x=5, y=0)
 
-#Присутствие треугольников
-rad4 = Radiobutton(frame24,text='присутствие треугольников (теорема 12)', value=4, variable=selected, background=colors['bfr'],foreground='#ffffff', font='Arial 10 bold')
-rad4.place(x=5, y=0)
-
-#Отсутсвие треугольников
-rad5 = Radiobutton(frame25,text='отсутствие треугольников (теорема 10)', value=5, variable=selected, background=colors['bfr'],foreground='#ffffff', font='Arial 10 bold')
-rad5.place(x=5, y=0)
-
-#Феодальная раздробленность
-rad6 = Radiobutton(frame26,text='феодальная раздробленность (стр. 48)', value=6, variable=selected, background=colors['bfr'],foreground='#ffffff', font='Arial 10 bold')
-rad6.place(x=5, y=0)
-
-#Империя
-rad7 = Radiobutton(frame27,text='империя (стр. 48)', value=7, variable=selected, background=colors['bfr'],foreground='#ffffff', font='Arial 10 bold')
-rad7.place(x=5, y=0)
-
-#Гигантская компонента связности
-rad8 = Radiobutton(frame28,text='Гигантская компонента связности', value=8, variable=selected, background=colors['bfr'],foreground='#ffffff', font='Arial 10 bold')
-rad8.place(x=5, y=0)
-
-Label(frame41, text="cвязность", background=colors['bfr'], font='Arial 10 bold', foreground='#FFFFFF').place(x=5, y=0)
-lbl1 = Label(frame41, text='-', font='Arial 12 bold', foreground='#ff0000', background=colors['bfr'])
-lbl1.place(x=200, y=0)
-
-Label(frame42, text="планарность", background=colors['bfr'], font='Arial 10 bold', foreground='#FFFFFF').place(x=5, y=0)
-lbl2 = Label(frame42, text='-', font='Arial 12 bold', foreground='#ff0000', background=colors['bfr'])
-lbl2.place(x=200, y=0)
-
-Label(frame43, text="наличие треугольников", background=colors['bfr'], font='Arial 10 bold', foreground='#FFFFFF').place(x=5, y=0)
-lbl3 = Label(frame43, text='-', font='Arial 12 bold', foreground='#ff0000', background=colors['bfr'])
-lbl3.place(x=200, y=0)
-
-img = ImageTk.PhotoImage(Image.open("Assets/images/start.png"))
-
-panel = Label(root, image = img)
-panel.grid(column=0, row=0)
-
-btn = Button(root, text="пуск", command=ERG, width=10, height=1, font='Arial 20 bold', background='#DC143C', foreground='#FFFFFF')
-btn.place(x=500, y=505)
-
-root.mainloop()
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()
