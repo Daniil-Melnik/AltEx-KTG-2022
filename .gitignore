@@ -1,3 +1,5 @@
+.nolongerinuse/*
+
 .idea/*
 .dist/*
 .venv/*
