@@ -14,6 +14,128 @@ from PIL import Image, ImageTk
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
+#################################################################################################################################################################################
+#  ERG Algorithm
+#################################################################################################################################################################################
+#################################################################################################################################################################################
+#################################################################################################################################################################################
+
+def ERG():
+    BV=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    E=[]
+    val_map = {}
+    n=int(app.txtn.get()) 
+    us = app.selected.get()
+    print(us)
+    if (us==1):
+        p=float(app.txtp.get())
+        app.txtс.delete(0, END)
+        app.txtс.insert(0,'c')
+    elif (us==2):
+        c=float(app.txtс.get())
+        p=c*(math.log(n)/n)
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==3):
+        c=float(app.txtс.get())
+        p=c/n
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==4):
+        w=n/math.log(n)
+        p=w/n
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==5):
+        a=1/n
+        p=a/n
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==6):
+        p=1/(n**3)
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==7):
+        p=n*math.log(n)/n
+        app.txtp.delete(first=0,last=END)
+        app.txtp.insert(0, str(p))
+    elif (us==8):
+        p=float(txtp.get())
+        app.txtс.delete(0, END)
+        app.txtс.insert(0,'c')
+
+    V=[]
+    for i in range(n*(n-1)//2):
+        E.append([])
+
+    for i in range (n):
+        V.append(BV[i])
+        val_map[BV[i]]=1.0
+    m=0
+
+    for i in range(n):
+        for j in range(i+1, len(V)):
+            E[m].append(V[i])
+            E[m].append(V[j])
+            m+=1
+    
+    G = nx.Graph()
+    G.add_nodes_from(V)
+    for i in range (n*(n-1)//2):
+        k=random.randint(0,1000)/1000
+        if (k<=p):
+            G.add_edge(E[i][0],E[i][1])    
+    
+    if (us==4):
+        all_cliques= nx.enumerate_all_cliques(G)
+        triad_cliques=[x for x in all_cliques if len(x)==3 ]
+        if (len(triad_cliques)!=0):
+            for v in triad_cliques[0]:
+                val_map[v]=0.1
+            
+    
+    all_cliques= nx.enumerate_all_cliques(G)
+    if triad_cliques := [x for x in all_cliques if len(x) == 3]:
+        app.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoTrue)
+    else:
+        app.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoFalse)
+
+    if (us==8):
+        for v in (max(nx.connected_components(G))):
+            val_map[v]=0.1 
+
+    values = [val_map.get(node, 0.25) for node in G.nodes()]
+
+    plt.clf()
+    if (nx.check_planarity(G, counterexample=False)[0]==True):
+        nx.draw_planar(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
+        app.labelPlanarity.configure(fg_color=App.Colors.graphInfoTrue)
+    else:
+        nx.draw_circular(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
+        app.labelPlanarity.configure(fg_color=App.Colors.graphInfoFalse)
+
+    if (nx.is_connected(G)):
+        app.labelConnectivity.configure(fg_color=App.Colors.graphInfoTrue)
+    else:
+        app.labelConnectivity.configure(fg_color=App.Colors.graphInfoFalse)
+        
+    print(max(nx.connected_components(G)))
+    plt.axis('on')
+    plt.savefig("st.png")
+    plt.clf()
+    plt.subplot(212)
+        
+    topImg = PhotoImage(file="st.png")
+    app.graphImage.configure(image=topImg)
+    app.graphImage.image = topImg
+
+    # topImg = PhotoImage(file="st.png")
+    # topImg = customtkinter.CTkImage(light_image=Image.open(os.path("st.png")), dark_image=Image.open(os.path.join(App.PIECE_DIR, 'bB.png')), size=(App.GRAPH_RESOLUTION,App.GRAPH_RESOLUTION))
+    # app.graphImage.configure(image=topImg)
+    # app.graphImage.image = topImg
+
+#################################################################################################################################################################################
+#################################################################################################################################################################################
 #  Setting initial main window parameters
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -64,13 +186,13 @@ class App(customtkinter.CTk):
         self.MenuLabel = customtkinter.CTkLabel(self.Menu, text="  Случайные графы", image=self.imageLogo, compound="left", font=customtkinter.CTkFont(size=15, weight="bold"))
         self.MenuLabel.grid(row=0, column=0, padx=20, pady=20)
         self.MenuButtonERG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=40, border_spacing=10, text="Модель Эрдёша-Реньи", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w", command=self.MenuButtonERG_event)
-        self.MenuButtonERG.grid(row=1, column=0, sticky="ew")
         self.MenuButtonBAG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=40, border_spacing=10, text="Модель Барабаши-Альберт", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w", command=self.MenuButtonBAG_event)
-        self.MenuButtonBAG.grid(row=2, column=0, sticky="ew")
         self.MenuButtonBRG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=40, border_spacing=10, text="Модель Баллобаша-Риордана", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w", command=self.MenuButtonBRG_event)
-        self.MenuButtonBRG.grid(row=3, column=0, sticky="ew")
         self.appearance_mode_menu = customtkinter.CTkOptionMenu(self.Menu, values=["System", "Light", "Dark"], command=self.change_appearance_mode_event)
-        self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+        self.MenuButtonERG.grid(row=1, column=0, sticky="ew")
+        self.MenuButtonBAG.grid(row=2, column=0, sticky="ew")
+        self.MenuButtonBRG.grid(row=3, column=0, sticky="ew")
+        self.appearance_mode_menu.grid(row=10, column=0, padx=10, pady=10, sticky="s")
 
         #################################################################################################################################################################################
         #################################################################################################################################################################################
@@ -84,10 +206,7 @@ class App(customtkinter.CTk):
         # self.FrameERG.grid_columnconfigure(0, weight=1)
         self.FrameERG.rowconfigure(14, weight=10)
         self.FrameERG.columnconfigure(0, weight=1)
-        
-        #################################
-        #    Frame window - left one    #
-        #################################
+        # Frame window - left one
         self.L_graphFrame = customtkinter.CTkFrame(master=self.FrameERG, width=self.GRAPH_RESOLUTION+20, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
         self.L_graphFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         # Зависсивые окна
@@ -95,9 +214,7 @@ class App(customtkinter.CTk):
         self.graphInfoFrame = customtkinter.CTkFrame(master=self.L_graphFrame, height=60, corner_radius=self.CORNER_RADIUS)
         self.graphVisualizeFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.graphInfoFrame.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-        #######################################
-        #    Parameters window - right one    #
-        #######################################
+        # Parameters window - right one
         self.R_parametersFrame = customtkinter.CTkFrame(master=self.FrameERG, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
         self.R_parametersFrame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
         # Зависсивые окна
@@ -110,10 +227,9 @@ class App(customtkinter.CTk):
         ############################################
         #    creating elements for L_graphFrame    #
         ############################################
-        # graph = customtkinter.CTkImage(light_image=Image.open(os.path.join("Assets/images/start.png")), dark_image=Image.open(os.path.join("Assets/images/start.png")), size=(54,54))
-        graph = PIL.Image.open("Assets/Images/BG_Erdos_Renyi.png")
-        self.graphImage = customtkinter.CTkLabel(master=self.graphVisualizeFrame, width=self.GRAPH_RESOLUTION-10, height=self.GRAPH_RESOLUTION-10,text="")
-        self.graphImage.image = graph
+        graph = customtkinter.CTkImage(light_image=Image.open(os.path.join("Assets/Images/BG_Erdos_Renyi.png")), dark_image=Image.open(os.path.join("Assets/Images/BG_Erdos_Renyi.png")), size=(self.GRAPH_RESOLUTION-20,self.GRAPH_RESOLUTION-20))
+        # graph = PIL.Image.open("Assets/Images/BG_Erdos_Renyi.png")
+        self.graphImage = customtkinter.CTkLabel(master=self.graphVisualizeFrame,width=self.GRAPH_RESOLUTION-10,height=self.GRAPH_RESOLUTION-10,text="",image=graph)
         self.graphImage.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)
         self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
         self.labelPlanarity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Планарность")
@@ -124,16 +240,25 @@ class App(customtkinter.CTk):
         ############################################
         #    creating elements for optionsFrame    #
         ############################################
-        self.selected = IntVar()
-        self.labedRad = customtkinter.CTkLabel(master=self.optionsFrame,text='Способы задания графа:')
-        self.radProbability = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Вероятностный граф', value=1, variable=self.selected)
-        self.radConnectivity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Связность (теорема 13)', value=2, variable=self.selected)
-        self.radPlanarity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Планарность (теорема 26)', value=3, variable=self.selected)
-        self.radNonTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Присутствие треугольников (теорема 12)', value=4, variable=self.selected)
-        self.radTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Отсутствие треугольников (теорема 10)', value=5, variable=self.selected)
-        self.radFeudalFrag = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Феодальная раздробленность (стр. 48)', value=6, variable=self.selected)
-        self.radEmpire = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Империя (стр. 48)', value=7, variable=self.selected)
-        self.radGiantConnComp = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Гигантская компонента связности', value=8, variable=self.selected)
+        self.selected = IntVar(value=0)
+        self.labedRad = customtkinter.CTkLabel(master=self.optionsFrame,anchor=customtkinter.W,text='Способы задания графа:')
+        self.radProbability = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Вероятностный граф', 
+            value=0, variable=self.selected)
+        self.radConnectivity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Связность (теорема 13)', 
+            value=1, variable=self.selected)
+        self.radPlanarity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Планарность (теорема 26)', 
+            value=2, variable=self.selected)
+        self.radNonTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Присутствие треугольников (теорема 12)', 
+            value=3, variable=self.selected)
+        self.radTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Отсутствие треугольников (теорема 10)', 
+            value=4, variable=self.selected)
+        self.radFeudalFrag = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Феодальная раздробленность (стр. 48)', 
+            value=5, variable=self.selected)
+        self.radEmpire = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Империя (стр. 48)', 
+            value=6, variable=self.selected)
+        self.radGiantConnComp = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Гигантская компонента связности', 
+            value=8, variable=self.selected)
+        #plotting elements
         self.labedRad.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.radProbability.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
         self.radConnectivity.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
@@ -146,18 +271,27 @@ class App(customtkinter.CTk):
         ##########################################
         #    creating elements for inputFrame    #
         ##########################################
-        self.txtnLabel = customtkinter.CTkLabel(master=self.inputFrame,text="Количество вершин в графе:")
-        self.txtpLabel = customtkinter.CTkLabel(master=self.inputFrame,text="Вероятность появления ребер в графе:")
-        self.txtсLabel = customtkinter.CTkLabel(master=self.inputFrame,text="С:")
+        vertexCount = 8
+        propability = 0.5
+        constantC = 1
+        self.labelTxtn = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Количество вершин в графе:")
+        self.labelTxtp = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Вероятность появления ребер в графе:")
+        self.labelTxtc = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Константа C:")
         self.txtn = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите количество вершин")
         self.txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите вероятность")
-        self.txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Задайте C")
-        self.txtnLabel.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
-        self.txtpLabel.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-        self.txtсLabel.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
-        self.txtn.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
-        self.txtp.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
-        self.txtс.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Задайте константу C")
+        self.sliderVertexCount = customtkinter.CTkSlider(master=self.inputFrame,height=25,width=480,from_=1, to=26, number_of_steps=25)
+        self.sliderPropability = customtkinter.CTkSlider(master=self.inputFrame,height=25,width=480,from_=0, to=1, number_of_steps=100)
+        self.sliderCConstant = customtkinter.CTkSlider(master=self.inputFrame,height=25,width=480,from_=0, to=10, number_of_steps=100)
+        self.sliderVertexCount.set(vertexCount)
+        self.sliderPropability.set(propability)
+        self.sliderCConstant.set(constantC)
+        self.labelTxtn.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.labelTxtp.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        self.labelTxtc.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
+        self.sliderVertexCount.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        self.sliderPropability.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
+        self.sliderCConstant.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
         ############################################
         #    creating elements for buttonsFrame    #
         ############################################
