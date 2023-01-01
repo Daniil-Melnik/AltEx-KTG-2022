@@ -12,6 +12,9 @@ from types import CellType
 from tkinter.ttk import Checkbutton
 from PIL import Image, ImageTk
 
+
+
+
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -147,6 +150,9 @@ def ERG():
     topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("graph.png")), dark_image=Image.open(os.path.join("graph.png")),size=(app.GRAPH_WIDTH,app.GRAPH_HEIGHT))
     app.graphImage.configure(image=topImg)
 
+
+
+
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -168,6 +174,8 @@ class App(customtkinter.CTk):
         graphInfoTrue = "#84a98c"
         graphInfoFalse = "#9b2226"
         graphBackground = "#9b2226"
+        sliderEnabled = "#2a9d8f"
+        sliderDisabled = "#780000"
 
     def __init__(self): 
         super().__init__()
@@ -186,12 +194,7 @@ class App(customtkinter.CTk):
         ####################################################
         #    load images with light and dark mode image    #
         ####################################################
-        pathImages = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Assets/Images")
-        pathIcons = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Assets/Icons")   
-        self.imageLogo = customtkinter.CTkImage(Image.open(os.path.join(pathIcons, "leti.png")), size=(32, 32))
-        self.imageERG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "ERG.png")), size=(500, 300))
-        self.imageBAG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BAG.png")), size=(500, 300))
-        self.imageBRG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BRG.png")), size=(500, 300))
+        self.imageLogo = customtkinter.CTkImage(Image.open("Assets/Icons/leti.png"), size=(32, 32))
 
         #################################
         #    create navigation frame    #
@@ -254,24 +257,25 @@ class App(customtkinter.CTk):
         ############################################
         #    creating elements for optionsFrame    #
         ############################################
-        self.selected = IntVar(value=0)
         self.labedRad = customtkinter.CTkLabel(master=self.optionsFrame,anchor=customtkinter.W,text='Способы задания графа:')
+        self.selected = IntVar(value=0)
+        #radiobuttons
         self.radProbability = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Вероятностный граф', 
-            value=0, variable=self.selected)
+            value=0, variable=self.selected, command = lambda v=0: self.updateSliders(v))
         self.radConnectivity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Связность (теорема 13)', 
-            value=1, variable=self.selected)
+            value=1, variable=self.selected, command = lambda v=1: self.updateSliders(v))
         self.radPlanarity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Планарность (теорема 26)', 
-            value=2, variable=self.selected)
+            value=2, variable=self.selected, command = lambda v=2: self.updateSliders(v))
         self.radNonTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Присутствие треугольников (теорема 12)', 
-            value=3, variable=self.selected)
+            value=3, variable=self.selected, command = lambda v=3: self.updateSliders(v))
         self.radTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Отсутствие треугольников (теорема 10)', 
-            value=4, variable=self.selected)
+            value=4, variable=self.selected, command = lambda v=4: self.updateSliders(v))
         self.radFeudalFrag = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Феодальная раздробленность (стр. 48)', 
-            value=5, variable=self.selected)
+            value=5, variable=self.selected, command = lambda v=5: self.updateSliders(v))
         self.radEmpire = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Империя (стр. 48)', 
-            value=6, variable=self.selected)
+            value=6, variable=self.selected, command = lambda v=6: self.updateSliders(v))
         self.radGiantConnComp = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Гигантская компонента связности', 
-            value=8, variable=self.selected)
+            value=7, variable=self.selected, command = lambda v=7: self.updateSliders(v))
         #plotting elements
         self.labedRad.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.radProbability.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
@@ -282,22 +286,26 @@ class App(customtkinter.CTk):
         self.radFeudalFrag.grid(row=6, column=0, sticky="nswe", padx=10, pady=10)
         self.radEmpire.grid(row=7, column=0, sticky="nswe", padx=10, pady=10)
         self.radGiantConnComp.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
-        
+
         ##########################################
         #    creating elements for inputFrame    #
         ##########################################
         self.vertexCount = 8
         self.propability = 0.5
         self.constantC = 1
-        self.labelTxtn = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Количество вершин в графе:")
-        self.labelTxtp = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Вероятность появления ребер в графе:")
-        self.labelTxtc = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Константа C:")
-        self.sliderVertexCount = customtkinter.CTkSlider(master=self.inputFrame,height=20,width=480,from_=1, to=26, number_of_steps=25)
-        self.sliderPropability = customtkinter.CTkSlider(master=self.inputFrame,height=20,width=480,from_=0, to=1, number_of_steps=100)
-        self.sliderCConstant = customtkinter.CTkSlider(master=self.inputFrame,height=20,width=480,from_=0, to=10, number_of_steps=100)
+        self.labelTxtn = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text=f"Количество вершин в графе: {self.vertexCount}")
+        self.labelTxtp = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text=f"Вероятность появления ребер в графе: {self.propability}")
+        self.labelTxtc = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text=f"Константа C: {self.constantC}")
+        self.sliderVertexCount = customtkinter.CTkSlider(master=self.inputFrame,height=30,width=480,from_=1, to=26, number_of_steps=25)
+        self.sliderPropability = customtkinter.CTkSlider(master=self.inputFrame,height=30,width=480,from_=0, to=1, number_of_steps=100)
+        self.sliderCConstant = customtkinter.CTkSlider(master=self.inputFrame,height=30,width=480,from_=0, to=10, number_of_steps=1000)
         self.sliderVertexCount.set(self.vertexCount)
         self.sliderPropability.set(self.propability)
         self.sliderCConstant.set(self.constantC)
+        self.sliderVertexCount.configure(command = lambda v=self.vertexCount: self.updateCountSliderLabel(v))
+        self.sliderPropability.configure(command = lambda v=self.propability: self.updatePropSliderLabel(v))
+        self.sliderCConstant.configure(command = lambda v=self.constantC: self.updateConstSliderLabel(v))
+        #plotting elements
         self.labelTxtn.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.labelTxtp.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
         self.labelTxtc.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
@@ -333,7 +341,36 @@ class App(customtkinter.CTk):
 
         # select default frame
         self.select_frame_by_name("ERG")
-
+        self.updateSliders(0)
+    
+    #################################################################################################################################################################################
+    #################################################################################################################################################################################
+    #################################################################################################################################################################################
+    #  defining functions
+    #################################################################################################################################################################################
+    #################################################################################################################################################################################
+    #################################################################################################################################################################################
+    
+    def updateConstSliderLabel(self,v):
+        self.labelTxtc.configure(text=f"Константа C: {v}")
+    def updatePropSliderLabel(self,v):
+        self.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {v}")
+    def updateCountSliderLabel(self,v):
+        self.labelTxtn.configure(text=f"Количество вершин в графе: {int(v)}")
+        
+    
+    
+    
+    def updateSliders(self, v):
+        if v in [0, 7]:
+            self.sliderVertexCount.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+            self.sliderPropability.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+            self.sliderCConstant.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
+        elif v in [1, 2, 3, 4, 5, 6]:
+            self.sliderVertexCount.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+            self.sliderPropability.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
+            self.sliderCConstant.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+        
     def select_frame_by_name(self, name):
         # set button color for selected button
         self.MenuButtonERG.configure(fg_color=("gray75", "gray25") if name == "ERG" else "transparent")
