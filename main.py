@@ -352,14 +352,11 @@ class App(customtkinter.CTk):
     #################################################################################################################################################################################
     
     def updateConstSliderLabel(self,v):
-        self.labelTxtc.configure(text=f"Константа C: {v}")
+        self.labelTxtc.configure(text=f"Константа C: {float('{:.2f}'.format(v))}")
     def updatePropSliderLabel(self,v):
-        self.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {v}")
+        self.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(v))}")
     def updateCountSliderLabel(self,v):
         self.labelTxtn.configure(text=f"Количество вершин в графе: {int(v)}")
-        
-    
-    
     
     def updateSliders(self, v):
         if v in [0, 7]:
