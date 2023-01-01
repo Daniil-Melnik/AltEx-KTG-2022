@@ -1,5 +1,3 @@
-.nolongerinuse/*
-
 .idea/*
 .dist/*
 .venv/*
@@ -7,4 +5,4 @@
 __pycache__/*
 Test/__pycache__/*
 
-st.png
+graph.png
