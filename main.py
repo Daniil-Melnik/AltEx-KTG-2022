@@ -19,131 +19,163 @@ from PIL import Image, ImageTk
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-
 def ERG():
-    BV=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-    E=[]
-    val_map = {}
-    n=int(app.txtn.get()) 
-    us = app.selected.get()
-    print(us)
-    if (us==1):
+    # sourcery skip: extract-duplicate-method, for-append-to-extend, for-index-underscore, list-comprehension, move-assign-in-block, simplify-len-comparison, use-named-expression
+    #######################
+    #                     #
+    #    Инициализация    #
+    #                     #
+    #######################
+    Edges = []
+    BaseVertex = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    valMap = {}
+    vertexCount=int(app.txtn.get())
+    selectedRadioButton = app.selected.get()
+    print(selectedRadioButton)
+    ############################
+    #    Вероятностный граф    #
+    ############################
+    if (selectedRadioButton==0):
         p=float(app.txtp.get())
         app.txtс.delete(0, END)
         app.txtс.insert(0,'c')
-    elif (us==2):
+    ################################
+    #    Связность (теорема 13)    #
+    ################################
+    elif (selectedRadioButton==1):
         c=float(app.txtс.get())
-        p=c*(math.log(n)/n)
+        p=c*(math.log(vertexCount)/vertexCount)
         app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==3):
+    ##################################
+    #    Планарность (теорема 26)    #
+    ##################################
+    elif (selectedRadioButton==2):
         c=float(app.txtс.get())
-        p=c/n
+        p=c/vertexCount
         app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==4):
-        w=n/math.log(n)
-        p=w/n
+    ################################################
+    #    Присутствие треугольников (теорема 12)    #
+    ################################################
+    elif (selectedRadioButton==3):
+        w=vertexCount/math.log(vertexCount)
+        p=w/vertexCount
         app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==5):
-        a=1/n
-        p=a/n
+     ###############################################
+     #    Отсутствие треугольников (теорема 10)    #
+     ###############################################
+    elif (selectedRadioButton==4):
+        a=1/vertexCount
+        p=a/vertexCount
         app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==6):
-        p=1/(n**3)
+    ##############################################
+    #    Феодальная раздробленность (стр. 48)    #
+    ##############################################
+    elif (selectedRadioButton==5):
+        p=1/(vertexCount**3)
         app.txtp.delete(first=0,last=END)
         app.txtp.insert(0, str(p))
-    elif (us==7):
-        p=n*math.log(n)/n
-        app.txtp.delete(first=0,last=END)
-        app.txtp.insert(0, str(p))
-    elif (us==8):
-        p=float(txtp.get())
+    ###########################
+    #    Империя (стр. 48)    #
+    ###########################
+    elif (selectedRadioButton==6):
+        p=vertexCount*math.log(vertexCount)/vertexCount
+        app.sliderPropability.delete(first=0,last=END)
+        app.sliderPropability.insert(0, str(p))
+    #########################################
+    #    Гигантская компонента связности    #
+    #########################################
+    elif (selectedRadioButton==7):
+        p=float(app.sliderPropability.get())
         app.txtс.delete(0, END)
         app.txtс.insert(0,'c')
-
-    V=[]
-    for i in range(n*(n-1)//2):
-        E.append([])
-
-    for i in range (n):
-        V.append(BV[i])
-        val_map[BV[i]]=1.0
+    ##############################################
+    #                                            #
+    #    постинициализация и вывод результата    #
+    #                                            #
+    ##############################################
+    Vertex=[]
+    for i in range(vertexCount*(vertexCount-1)//2):
+        Edges.append([])
+    for i in range(vertexCount):
+        Vertex.append(BaseVertex[i])
+        valMap[BaseVertex[i]]=1.0
     m=0
-
-    for i in range(n):
-        for j in range(i+1, len(V)):
-            E[m].append(V[i])
-            E[m].append(V[j])
+    for i in range(vertexCount):
+        for j in range(i+1, len(Vertex)):
+            Edges[m].append(Vertex[i])
+            Edges[m].append(Vertex[j])
             m+=1
-    
     G = nx.Graph()
-    G.add_nodes_from(V)
-    for i in range (n*(n-1)//2):
+    G.add_nodes_from(Vertex)
+    for i in range (vertexCount*(vertexCount-1)//2):
         k=random.randint(0,1000)/1000
         if (k<=p):
-            G.add_edge(E[i][0],E[i][1])    
-    
-    if (us==4):
+            G.add_edge(Edges[i][0],Edges[i][1])    
+    if (selectedRadioButton==4):
         all_cliques= nx.enumerate_all_cliques(G)
         triad_cliques=[x for x in all_cliques if len(x)==3 ]
         if (len(triad_cliques)!=0):
             for v in triad_cliques[0]:
-                val_map[v]=0.1
-            
-    
+                valMap[v]=0.1
+    ###########################################
+    #    проверка на налицие треугольников    #
+    ###########################################
     all_cliques= nx.enumerate_all_cliques(G)
     if triad_cliques := [x for x in all_cliques if len(x) == 3]:
         app.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoTrue)
     else:
         app.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoFalse)
-
-    if (us==8):
+    if (selectedRadioButton==8):
         for v in (max(nx.connected_components(G))):
-            val_map[v]=0.1 
-
-    values = [val_map.get(node, 0.25) for node in G.nodes()]
-
+            valMap[v]=0.1
+    values = [valMap.get(node, 0.25) for node in G.nodes()]
     plt.clf()
+    #################################
+    #    проверка на планарность    #
+    #################################
     if (nx.check_planarity(G, counterexample=False)[0]==True):
         nx.draw_planar(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
         app.labelPlanarity.configure(fg_color=App.Colors.graphInfoTrue)
     else:
         nx.draw_circular(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
         app.labelPlanarity.configure(fg_color=App.Colors.graphInfoFalse)
-
+    ###############################
+    #    проверка на связность    #
+    ###############################
     if (nx.is_connected(G)):
         app.labelConnectivity.configure(fg_color=App.Colors.graphInfoTrue)
     else:
         app.labelConnectivity.configure(fg_color=App.Colors.graphInfoFalse)
-        
     print(max(nx.connected_components(G)))
     plt.axis('on')
-    plt.savefig("st.png")
+    plt.savefig("graph.png")
     plt.clf()
     plt.subplot(212)
-        
-    topImg = PhotoImage(file="st.png")
+    topImg = PhotoImage(file="graph.png")
+    # topImg = PhotoImage(plt)
     app.graphImage.configure(image=topImg)
     app.graphImage.image = topImg
-
-    # topImg = PhotoImage(file="st.png")
-    # topImg = customtkinter.CTkImage(light_image=Image.open(os.path("st.png")), dark_image=Image.open(os.path.join(App.PIECE_DIR, 'bB.png')), size=(App.GRAPH_RESOLUTION,App.GRAPH_RESOLUTION))
+    # topImg = PhotoImage(file="graph.png")
+    # topImg = customtkinter.CTkImage(light_image=Image.open(os.path("graph.png")), dark_image=Image.open(os.path.join(App.PIECE_DIR, 'bB.png')), size=(App.GRAPH_RESOLUTION,App.GRAPH_RESOLUTION))
     # app.graphImage.configure(image=topImg)
     # app.graphImage.image = topImg
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
+#################################################################################################################################################################################
 #  Setting initial main window parameters
+#################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 class App(customtkinter.CTk):
     ######################################################################
     #    Setting the parameters and the class for working with colors    #
     ######################################################################
-    WIDTH = 1580
+    WIDTH = 1600
     HEIGHT = 900
     GRAPH_RESOLUTION = HEIGHT-100
     CORNER_RADIUS = 10
@@ -173,9 +205,9 @@ class App(customtkinter.CTk):
         pathImages = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Assets/Images")
         pathIcons = os.path.join(os.path.dirname(os.path.realpath(__file__)), "Assets/Icons")   
         self.imageLogo = customtkinter.CTkImage(Image.open(os.path.join(pathIcons, "leti.png")), size=(32, 32))
-        self.imageERG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BG_Erdos_Renyi.png")), size=(500, 300))
-        self.imageBAG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BG_Barabasi_Albert.png")), size=(500, 300))
-        self.imageBRG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BG_Bollobas_Riordan.png")), size=(500, 300))
+        self.imageERG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "ERG.png")), size=(500, 300))
+        self.imageBAG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BAG.png")), size=(500, 300))
+        self.imageBRG = customtkinter.CTkImage(Image.open(os.path.join(pathImages, "BRG.png")), size=(500, 300))
 
         #################################
         #    create navigation frame    #
@@ -227,7 +259,7 @@ class App(customtkinter.CTk):
         ############################################
         #    creating elements for L_graphFrame    #
         ############################################
-        graph = customtkinter.CTkImage(light_image=Image.open(os.path.join("Assets/Images/BG_Erdos_Renyi.png")), dark_image=Image.open(os.path.join("Assets/Images/BG_Erdos_Renyi.png")), size=(self.GRAPH_RESOLUTION-20,self.GRAPH_RESOLUTION-20))
+        graph = customtkinter.CTkImage(light_image=Image.open(os.path.join("Assets/Images/ERG.png")), dark_image=Image.open(os.path.join("Assets/Images/ERG.png")), size=(self.GRAPH_RESOLUTION-20,self.GRAPH_RESOLUTION-20))
         # graph = PIL.Image.open("Assets/Images/BG_Erdos_Renyi.png")
         self.graphImage = customtkinter.CTkLabel(master=self.graphVisualizeFrame,width=self.GRAPH_RESOLUTION-10,height=self.GRAPH_RESOLUTION-10,text="",image=graph)
         self.graphImage.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)
@@ -271,9 +303,9 @@ class App(customtkinter.CTk):
         ##########################################
         #    creating elements for inputFrame    #
         ##########################################
-        vertexCount = 8
-        propability = 0.5
-        constantC = 1
+        self.vertexCount = 8
+        self.propability = 0.5
+        self.constantC = 1
         self.labelTxtn = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Количество вершин в графе:")
         self.labelTxtp = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Вероятность появления ребер в графе:")
         self.labelTxtc = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Константа C:")
@@ -283,9 +315,9 @@ class App(customtkinter.CTk):
         self.sliderVertexCount = customtkinter.CTkSlider(master=self.inputFrame,height=25,width=480,from_=1, to=26, number_of_steps=25)
         self.sliderPropability = customtkinter.CTkSlider(master=self.inputFrame,height=25,width=480,from_=0, to=1, number_of_steps=100)
         self.sliderCConstant = customtkinter.CTkSlider(master=self.inputFrame,height=25,width=480,from_=0, to=10, number_of_steps=100)
-        self.sliderVertexCount.set(vertexCount)
-        self.sliderPropability.set(propability)
-        self.sliderCConstant.set(constantC)
+        self.sliderVertexCount.set(self.vertexCount)
+        self.sliderPropability.set(self.propability)
+        self.sliderCConstant.set(self.constantC)
         self.labelTxtn.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.labelTxtp.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
         self.labelTxtc.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
