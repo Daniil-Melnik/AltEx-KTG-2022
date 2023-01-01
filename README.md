@@ -3,8 +3,10 @@
 ## Участники разработки, студенты СПбГЭТУ (ЛЭТИ):
 - Мельник Даниил, гр. 1308,
 - Лепов Алексей, гр. 1308.
+
 ## Пример работы программы на модели Erdős-Rényi:
-![ERG](https://user-images.githubusercontent.com/77492646/210179424-08743f22-cb6a-474a-b645-57a4eec3bd15.gif)
+![ERG](https://user-images.githubusercontent.com/77492646/210180061-2a438bdb-b592-4990-8ca3-566b1dff307b.gif)
+
 ## Установка / Installation:
 ```bash
 pip3 install -r requirements.txt
