@@ -1,9 +1,16 @@
-import tkinter
-
-import customtkinter
 import os
-from PIL import Image
+import sys
+import math
+import random
+import customtkinter
+import networkx as nx
+import matplotlib.pyplot as plt
+import PIL
 
+from tkinter import *
+from types import CellType
+from tkinter.ttk import Checkbutton
+from PIL import Image, ImageTk
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -14,10 +21,15 @@ class App(customtkinter.CTk):
     ######################################################################
     #    Setting the parameters and the class for working with colors    #
     ######################################################################
-    WIDTH = 1860
-    HEIGHT = 1000
+    WIDTH = 1580
+    HEIGHT = 900
     GRAPH_RESOLUTION = HEIGHT-100
     CORNER_RADIUS = 10
+    # color class
+    class Colors:
+        graphInfoTrue = "#84a98c"
+        graphInfoFalse = "#9b2226"
+        graphBackground = "#9b2226"
 
     def __init__(self): 
         super().__init__()
@@ -60,29 +72,118 @@ class App(customtkinter.CTk):
         self.appearance_mode_menu = customtkinter.CTkOptionMenu(self.Menu, values=["System", "Light", "Dark"], command=self.change_appearance_mode_event)
         self.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
-        ##########################
-        #    create ERG frame    #
-        ##########################
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        #  create ERG frame
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        #frame
         self.FrameERG = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        self.FrameERG.grid_columnconfigure(0, weight=1)
-
+        # self.FrameERG.grid_columnconfigure(0, weight=1)
+        self.FrameERG.rowconfigure(14, weight=10)
+        self.FrameERG.columnconfigure(0, weight=1)
         
+        #################################
+        #    Frame window - left one    #
+        #################################
+        self.L_graphFrame = customtkinter.CTkFrame(master=self.FrameERG, width=self.GRAPH_RESOLUTION+20, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
+        self.L_graphFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        # Зависсивые окна
+        self.graphVisualizeFrame = customtkinter.CTkFrame(master=self.L_graphFrame, width=self.GRAPH_RESOLUTION, height=self.GRAPH_RESOLUTION, corner_radius=self.CORNER_RADIUS)
+        self.graphInfoFrame = customtkinter.CTkFrame(master=self.L_graphFrame, height=60, corner_radius=self.CORNER_RADIUS)
+        self.graphVisualizeFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.graphInfoFrame.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        #######################################
+        #    Parameters window - right one    #
+        #######################################
+        self.R_parametersFrame = customtkinter.CTkFrame(master=self.FrameERG, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
+        self.R_parametersFrame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
+        # Зависсивые окна
+        self.optionsFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_RESOLUTION/3, width=500, corner_radius=self.CORNER_RADIUS)
+        self.inputFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_RESOLUTION/3, width=500, corner_radius=self.CORNER_RADIUS)
+        self.buttonsFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_RESOLUTION/3, width=500, corner_radius=self.CORNER_RADIUS)
+        self.optionsFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.inputFrame.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        self.buttonsFrame.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        ############################################
+        #    creating elements for L_graphFrame    #
+        ############################################
+        # graph = customtkinter.CTkImage(light_image=Image.open(os.path.join("Assets/images/start.png")), dark_image=Image.open(os.path.join("Assets/images/start.png")), size=(54,54))
+        graph = PIL.Image.open("Assets/Images/BG_Erdos_Renyi.png")
+        self.graphImage = customtkinter.CTkLabel(master=self.graphVisualizeFrame, width=self.GRAPH_RESOLUTION-10, height=self.GRAPH_RESOLUTION-10,text="")
+        self.graphImage.image = graph
+        self.graphImage.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)
+        self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
+        self.labelPlanarity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Планарность")
+        self.labelTrianglesPresence= customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Наличие треугольников")
+        self.labelConnectivity.grid(row=0, column=0, sticky="nswe", padx=5, pady=0)
+        self.labelPlanarity.grid(row=0, column=1, sticky="nswe", padx=5, pady=0)
+        self.labelTrianglesPresence.grid(row=0, column=2, sticky="nswe", padx=5, pady=0)
+        ############################################
+        #    creating elements for optionsFrame    #
+        ############################################
+        self.selected = IntVar()
+        self.labedRad = customtkinter.CTkLabel(master=self.optionsFrame,text='Способы задания графа:')
+        self.radProbability = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Вероятностный граф', value=1, variable=self.selected)
+        self.radConnectivity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Связность (теорема 13)', value=2, variable=self.selected)
+        self.radPlanarity = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Планарность (теорема 26)', value=3, variable=self.selected)
+        self.radNonTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Присутствие треугольников (теорема 12)', value=4, variable=self.selected)
+        self.radTriangle = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Отсутствие треугольников (теорема 10)', value=5, variable=self.selected)
+        self.radFeudalFrag = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Феодальная раздробленность (стр. 48)', value=6, variable=self.selected)
+        self.radEmpire = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Империя (стр. 48)', value=7, variable=self.selected)
+        self.radGiantConnComp = customtkinter.CTkRadioButton(master=self.optionsFrame,text='Гигантская компонента связности', value=8, variable=self.selected)
+        self.labedRad.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.radProbability.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        self.radConnectivity.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        self.radPlanarity.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
+        self.radNonTriangle.grid(row=4, column=0, sticky="nswe", padx=10, pady=10)
+        self.radTriangle.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
+        self.radFeudalFrag.grid(row=6, column=0, sticky="nswe", padx=10, pady=10)
+        self.radEmpire.grid(row=7, column=0, sticky="nswe", padx=10, pady=10)
+        self.radGiantConnComp.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
+        ##########################################
+        #    creating elements for inputFrame    #
+        ##########################################
+        self.txtnLabel = customtkinter.CTkLabel(master=self.inputFrame,text="Количество вершин в графе:")
+        self.txtpLabel = customtkinter.CTkLabel(master=self.inputFrame,text="Вероятность появления ребер в графе:")
+        self.txtсLabel = customtkinter.CTkLabel(master=self.inputFrame,text="С:")
+        self.txtn = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите количество вершин")
+        self.txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите вероятность")
+        self.txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Задайте C")
+        self.txtnLabel.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtpLabel.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtсLabel.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
+        self.txtn.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtp.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
+        self.txtс.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
+        ############################################
+        #    creating elements for buttonsFrame    #
+        ############################################
+        self.btnCreate = customtkinter.CTkButton(master=self.buttonsFrame,text="Построить граф",height=40,width=480)
+        self.btnSave = customtkinter.CTkButton(master=self.buttonsFrame,text="Сохранить граф как картинку",height=40,width=480)
+        self.btnCreate.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.btnSave.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
 
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        #  create BAG frame
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
 
-
-        self.FrameERG_large_image_label = customtkinter.CTkLabel(self.FrameERG, text="", image=self.imageERG)
-        self.FrameERG_large_image_label.grid(row=0, column=0, padx=20, pady=10)
-        self.FrameERG_button_4 = customtkinter.CTkButton(self.FrameERG, text="CTkButton", image=self.imageERG, compound="bottom", anchor="w")
-        self.FrameERG_button_4.grid(row=4, column=0, padx=20, pady=10)
-
-        ##########################
-        #    create BAG frame    #
-        ##########################
         self.second_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-
-        ##########################
-        #    create BRG frame    #
-        ##########################
+        
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        #  create BRG frame
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        #################################################################################################################################################################################
+        
         self.third_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
 
         # select default frame
