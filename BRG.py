@@ -207,7 +207,8 @@ root["bg"] = colors['bgr']
 
 g = GraphBarabasiAlbert()
 
-img = ImageTk.PhotoImage(Image.open("start3.png"))
+# img = ImageTk.PhotoImage(Image.open("Assets/Images/BRG.png"))
+img = None
 root.title("Модель случайного графа Боллобаша-Риордана")
 panel = Label(root, image = img)
 panel.grid(column=0, row=0)
