@@ -1,12 +1,7 @@
-import gc
 import os
 import sys
 import math
-import shutil
 import random
-import pymysql
-import platform
-import itertools
 import customtkinter
 import networkx as nx
 import matplotlib.pyplot as plt
