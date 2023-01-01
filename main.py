@@ -29,69 +29,58 @@ def ERG():
     Edges = []
     BaseVertex = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
     valMap = {}
-    vertexCount=int(app.txtn.get())
-    selectedRadioButton = app.selected.get()
-    print(selectedRadioButton)
+    vertexCount=int(app.sliderVertexCount.get())
+    selectedRadioButton=app.selected.get()
     ############################
     #    Вероятностный граф    #
     ############################
     if (selectedRadioButton==0):
-        p=float(app.txtp.get())
-        app.txtс.delete(0, END)
-        app.txtс.insert(0,'c')
+        propability=float(app.sliderPropability.get())
     ################################
     #    Связность (теорема 13)    #
     ################################
     elif (selectedRadioButton==1):
-        c=float(app.txtс.get())
-        p=c*(math.log(vertexCount)/vertexCount)
-        app.txtp.delete(first=0,last=END)
-        app.txtp.insert(0, str(p))
+        constantC=float(app.sliderCConstant.get())
+        propability=constantC*(math.log(vertexCount)/vertexCount)
+        app.sliderPropability.set(propability)
     ##################################
     #    Планарность (теорема 26)    #
     ##################################
     elif (selectedRadioButton==2):
-        c=float(app.txtс.get())
-        p=c/vertexCount
-        app.txtp.delete(first=0,last=END)
-        app.txtp.insert(0, str(p))
+        constantC=float(app.sliderCConstant.get())
+        propability=constantC/vertexCount
+        app.sliderPropability.set(propability)
     ################################################
     #    Присутствие треугольников (теорема 12)    #
     ################################################
     elif (selectedRadioButton==3):
         w=vertexCount/math.log(vertexCount)
-        p=w/vertexCount
-        app.txtp.delete(first=0,last=END)
-        app.txtp.insert(0, str(p))
+        propability=w/vertexCount
+        app.sliderPropability.set(propability)
      ###############################################
      #    Отсутствие треугольников (теорема 10)    #
      ###############################################
     elif (selectedRadioButton==4):
         a=1/vertexCount
-        p=a/vertexCount
-        app.txtp.delete(first=0,last=END)
-        app.txtp.insert(0, str(p))
+        propability=a/vertexCount
+        app.sliderPropability.set(propability)
     ##############################################
     #    Феодальная раздробленность (стр. 48)    #
     ##############################################
     elif (selectedRadioButton==5):
-        p=1/(vertexCount**3)
-        app.txtp.delete(first=0,last=END)
-        app.txtp.insert(0, str(p))
+        propability=1/(vertexCount**3)
+        app.sliderPropability.set(propability)
     ###########################
     #    Империя (стр. 48)    #
     ###########################
     elif (selectedRadioButton==6):
-        p=vertexCount*math.log(vertexCount)/vertexCount
-        app.sliderPropability.delete(first=0,last=END)
-        app.sliderPropability.insert(0, str(p))
+        propability=vertexCount*math.log(vertexCount)/vertexCount
+        app.sliderPropability.set(propability)
     #########################################
     #    Гигантская компонента связности    #
     #########################################
     elif (selectedRadioButton==7):
-        p=float(app.sliderPropability.get())
-        app.txtс.delete(0, END)
-        app.txtс.insert(0,'c')
+        propability=float(app.sliderPropability.get())
     ##############################################
     #                                            #
     #    постинициализация и вывод результата    #
@@ -109,60 +98,54 @@ def ERG():
             Edges[m].append(Vertex[i])
             Edges[m].append(Vertex[j])
             m+=1
-    G = nx.Graph()
-    G.add_nodes_from(Vertex)
+    Graph = nx.Graph()
+    Graph.add_nodes_from(Vertex)
     for i in range (vertexCount*(vertexCount-1)//2):
         k=random.randint(0,1000)/1000
-        if (k<=p):
-            G.add_edge(Edges[i][0],Edges[i][1])    
+        if (k<=propability):
+            Graph.add_edge(Edges[i][0],Edges[i][1])    
     if (selectedRadioButton==4):
-        all_cliques= nx.enumerate_all_cliques(G)
+        all_cliques = nx.enumerate_all_cliques(Graph)
         triad_cliques=[x for x in all_cliques if len(x)==3 ]
         if (len(triad_cliques)!=0):
             for v in triad_cliques[0]:
                 valMap[v]=0.1
+    all_cliques= nx.enumerate_all_cliques(Graph)
     ###########################################
     #    проверка на налицие треугольников    #
     ###########################################
-    all_cliques= nx.enumerate_all_cliques(G)
     if triad_cliques := [x for x in all_cliques if len(x) == 3]:
         app.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoTrue)
     else:
         app.labelTrianglesPresence.configure(fg_color=App.Colors.graphInfoFalse)
     if (selectedRadioButton==8):
-        for v in (max(nx.connected_components(G))):
+        for v in (max(nx.connected_components(Graph))):
             valMap[v]=0.1
-    values = [valMap.get(node, 0.25) for node in G.nodes()]
+    values = [valMap.get(node, 0.25) for node in Graph.nodes()]
     plt.clf()
     #################################
     #    проверка на планарность    #
     #################################
-    if (nx.check_planarity(G, counterexample=False)[0]==True):
-        nx.draw_planar(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
+    if (nx.check_planarity(Graph, counterexample=False)[0]==True):
+        nx.draw_planar(Graph, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
         app.labelPlanarity.configure(fg_color=App.Colors.graphInfoTrue)
     else:
-        nx.draw_circular(G, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
+        nx.draw_circular(Graph, cmap=plt.get_cmap('viridis'), node_color=values, with_labels=True, font_color='white')
         app.labelPlanarity.configure(fg_color=App.Colors.graphInfoFalse)
     ###############################
     #    проверка на связность    #
     ###############################
-    if (nx.is_connected(G)):
+    if (nx.is_connected(Graph)):
         app.labelConnectivity.configure(fg_color=App.Colors.graphInfoTrue)
     else:
         app.labelConnectivity.configure(fg_color=App.Colors.graphInfoFalse)
-    print(max(nx.connected_components(G)))
+    print(max(nx.connected_components(Graph)))
     plt.axis('on')
-    plt.savefig("graph.png")
+    plt.savefig("graph.png", dpi=150) # 960x720
     plt.clf()
     plt.subplot(212)
-    topImg = PhotoImage(file="graph.png")
-    # topImg = PhotoImage(plt)
+    topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("graph.png")), dark_image=Image.open(os.path.join("graph.png")),size=(app.GRAPH_WIDTH,app.GRAPH_HEIGHT))
     app.graphImage.configure(image=topImg)
-    app.graphImage.image = topImg
-    # topImg = PhotoImage(file="graph.png")
-    # topImg = customtkinter.CTkImage(light_image=Image.open(os.path("graph.png")), dark_image=Image.open(os.path.join(App.PIECE_DIR, 'bB.png')), size=(App.GRAPH_RESOLUTION,App.GRAPH_RESOLUTION))
-    # app.graphImage.configure(image=topImg)
-    # app.graphImage.image = topImg
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -175,9 +158,10 @@ class App(customtkinter.CTk):
     ######################################################################
     #    Setting the parameters and the class for working with colors    #
     ######################################################################
-    WIDTH = 1600
-    HEIGHT = 900
-    GRAPH_RESOLUTION = HEIGHT-100
+    WIDTH = 1760
+    HEIGHT = 830
+    GRAPH_WIDTH = 960   # if dpi is set to 150
+    GRAPH_HEIGHT = 720  # if dpi is set to 150
     CORNER_RADIUS = 10
     # color class
     class Colors:
@@ -191,7 +175,7 @@ class App(customtkinter.CTk):
         self.resizable(False, False)
         self.title("Модели случайных графов")
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
-        self.geometry(f"{App.WIDTH+20}x{App.HEIGHT+20}")
+        self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
 
         #############################
         #    set grid layout 1x2    #
@@ -233,42 +217,40 @@ class App(customtkinter.CTk):
         #################################################################################################################################################################################
         #################################################################################################################################################################################
         #################################################################################################################################################################################
-        #frame
+        
         self.FrameERG = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
-        # self.FrameERG.grid_columnconfigure(0, weight=1)
         self.FrameERG.rowconfigure(14, weight=10)
         self.FrameERG.columnconfigure(0, weight=1)
         # Frame window - left one
-        self.L_graphFrame = customtkinter.CTkFrame(master=self.FrameERG, width=self.GRAPH_RESOLUTION+20, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
-        self.L_graphFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
-        # Зависсивые окна
-        self.graphVisualizeFrame = customtkinter.CTkFrame(master=self.L_graphFrame, width=self.GRAPH_RESOLUTION, height=self.GRAPH_RESOLUTION, corner_radius=self.CORNER_RADIUS)
-        self.graphInfoFrame = customtkinter.CTkFrame(master=self.L_graphFrame, height=60, corner_radius=self.CORNER_RADIUS)
+        self.graphFrame = customtkinter.CTkFrame(master=self.FrameERG, width=self.GRAPH_HEIGHT+20, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
+        self.graphFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
+        self.graphVisualizeFrame = customtkinter.CTkFrame(master=self.graphFrame, width=self.GRAPH_HEIGHT, height=self.GRAPH_HEIGHT, corner_radius=self.CORNER_RADIUS)
+        self.graphInfoFrame = customtkinter.CTkFrame(master=self.graphFrame, height=60, corner_radius=self.CORNER_RADIUS)
         self.graphVisualizeFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.graphInfoFrame.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
         # Parameters window - right one
-        self.R_parametersFrame = customtkinter.CTkFrame(master=self.FrameERG, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
-        self.R_parametersFrame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
-        # Зависсивые окна
-        self.optionsFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_RESOLUTION/3, width=500, corner_radius=self.CORNER_RADIUS)
-        self.inputFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_RESOLUTION/3, width=500, corner_radius=self.CORNER_RADIUS)
-        self.buttonsFrame = customtkinter.CTkFrame(master=self.R_parametersFrame, height=self.GRAPH_RESOLUTION/3, width=500, corner_radius=self.CORNER_RADIUS)
+        self.parametersFrame = customtkinter.CTkFrame(master=self.FrameERG, height=self.HEIGHT, corner_radius=self.CORNER_RADIUS)
+        self.parametersFrame.grid(row=0, column=1, sticky="nswe", padx=10, pady=10)
+        self.optionsFrame = customtkinter.CTkFrame(master=self.parametersFrame, height=self.GRAPH_HEIGHT/3, width=500, corner_radius=self.CORNER_RADIUS)
+        self.inputFrame = customtkinter.CTkFrame(master=self.parametersFrame, height=self.GRAPH_HEIGHT/3, width=500, corner_radius=self.CORNER_RADIUS)
+        self.buttonsFrame = customtkinter.CTkFrame(master=self.parametersFrame, height=self.GRAPH_HEIGHT/3, width=500, corner_radius=self.CORNER_RADIUS)
         self.optionsFrame.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.inputFrame.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
         self.buttonsFrame.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-        ############################################
-        #    creating elements for L_graphFrame    #
-        ############################################
-        graph = customtkinter.CTkImage(light_image=Image.open(os.path.join("Assets/Images/ERG.png")), dark_image=Image.open(os.path.join("Assets/Images/ERG.png")), size=(self.GRAPH_RESOLUTION-20,self.GRAPH_RESOLUTION-20))
-        # graph = PIL.Image.open("Assets/Images/BG_Erdos_Renyi.png")
-        self.graphImage = customtkinter.CTkLabel(master=self.graphVisualizeFrame,width=self.GRAPH_RESOLUTION-10,height=self.GRAPH_RESOLUTION-10,text="",image=graph)
+        
+        ##########################################
+        #    creating elements for graphFrame    #
+        ##########################################
+        graph = customtkinter.CTkImage(light_image=Image.open(os.path.join("Assets/Images/ERG.png")), dark_image=Image.open(os.path.join("Assets/Images/ERG.png")), size=(self.GRAPH_WIDTH,self.GRAPH_HEIGHT))
+        self.graphImage = customtkinter.CTkLabel(master=self.graphVisualizeFrame,width=self.GRAPH_HEIGHT-10,height=self.GRAPH_HEIGHT-10,text="",image=graph)
         self.graphImage.grid(row=0, column=0, sticky="nswe", padx=0, pady=0)
-        self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
-        self.labelPlanarity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Планарность")
-        self.labelTrianglesPresence= customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_RESOLUTION/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Наличие треугольников")
+        self.labelConnectivity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
+        self.labelPlanarity = customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Планарность")
+        self.labelTrianglesPresence= customtkinter.CTkLabel(master=self.graphInfoFrame,width=(self.GRAPH_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Наличие треугольников")
         self.labelConnectivity.grid(row=0, column=0, sticky="nswe", padx=5, pady=0)
         self.labelPlanarity.grid(row=0, column=1, sticky="nswe", padx=5, pady=0)
         self.labelTrianglesPresence.grid(row=0, column=2, sticky="nswe", padx=5, pady=0)
+        
         ############################################
         #    creating elements for optionsFrame    #
         ############################################
@@ -300,6 +282,7 @@ class App(customtkinter.CTk):
         self.radFeudalFrag.grid(row=6, column=0, sticky="nswe", padx=10, pady=10)
         self.radEmpire.grid(row=7, column=0, sticky="nswe", padx=10, pady=10)
         self.radGiantConnComp.grid(row=8, column=0, sticky="nswe", padx=10, pady=10)
+        
         ##########################################
         #    creating elements for inputFrame    #
         ##########################################
@@ -309,12 +292,9 @@ class App(customtkinter.CTk):
         self.labelTxtn = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Количество вершин в графе:")
         self.labelTxtp = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Вероятность появления ребер в графе:")
         self.labelTxtc = customtkinter.CTkLabel(master=self.inputFrame,anchor=customtkinter.W,text="Константа C:")
-        self.txtn = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите количество вершин")
-        self.txtp = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Введите вероятность")
-        self.txtс = customtkinter.CTkEntry(master=self.inputFrame,height=40,width=480,placeholder_text="Задайте константу C")
-        self.sliderVertexCount = customtkinter.CTkSlider(master=self.inputFrame,height=25,width=480,from_=1, to=26, number_of_steps=25)
-        self.sliderPropability = customtkinter.CTkSlider(master=self.inputFrame,height=25,width=480,from_=0, to=1, number_of_steps=100)
-        self.sliderCConstant = customtkinter.CTkSlider(master=self.inputFrame,height=25,width=480,from_=0, to=10, number_of_steps=100)
+        self.sliderVertexCount = customtkinter.CTkSlider(master=self.inputFrame,height=20,width=480,from_=1, to=26, number_of_steps=25)
+        self.sliderPropability = customtkinter.CTkSlider(master=self.inputFrame,height=20,width=480,from_=0, to=1, number_of_steps=100)
+        self.sliderCConstant = customtkinter.CTkSlider(master=self.inputFrame,height=20,width=480,from_=0, to=10, number_of_steps=100)
         self.sliderVertexCount.set(self.vertexCount)
         self.sliderPropability.set(self.propability)
         self.sliderCConstant.set(self.constantC)
@@ -324,13 +304,12 @@ class App(customtkinter.CTk):
         self.sliderVertexCount.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
         self.sliderPropability.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
         self.sliderCConstant.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
+        
         ############################################
         #    creating elements for buttonsFrame    #
         ############################################
-        self.btnCreate = customtkinter.CTkButton(master=self.buttonsFrame,text="Построить граф",height=40,width=480)
-        self.btnSave = customtkinter.CTkButton(master=self.buttonsFrame,text="Сохранить граф как картинку",height=40,width=480)
+        self.btnCreate = customtkinter.CTkButton(master=self.buttonsFrame,text="Построить граф",height=35,width=480,command=ERG)
         self.btnCreate.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
-        self.btnSave.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
 
         #################################################################################################################################################################################
         #################################################################################################################################################################################
@@ -388,10 +367,7 @@ class App(customtkinter.CTk):
         customtkinter.set_appearance_mode(new_appearance_mode)
 
     def on_closing(self, event=0):
-        self.destroy()
-
-
-
+        self.quit()
 
 if __name__ == "__main__":
     app = App()
