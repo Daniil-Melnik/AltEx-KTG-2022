@@ -227,7 +227,7 @@ Label(frame43, text="наличие треугольников", background=colo
 lbl3 = Label(frame43, text='-', font='Arial 12 bold', foreground='#ff0000', background=colors['bfr'])
 lbl3.place(x=200, y=0)
 
-img = ImageTk.PhotoImage(Image.open("Assets/Images/BG_Erdos_Renyi.png"))
+img = ImageTk.PhotoImage(Image.open("Assets/Images/ERG.png"))
 
 panel = Label(root, image = None)
 panel.grid(column=0, row=0)
