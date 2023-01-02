@@ -46,6 +46,7 @@ def ERG():
         constantC=float(app.sliderCConstant.get())
         propability=constantC*(math.log(vertexCount)/vertexCount)
         app.sliderPropability.set(propability)
+        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ##################################
     #    Планарность (теорема 26)    #
     ##################################
@@ -53,6 +54,7 @@ def ERG():
         constantC=float(app.sliderCConstant.get())
         propability=constantC/vertexCount
         app.sliderPropability.set(propability)
+        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ################################################
     #    Присутствие треугольников (теорема 12)    #
     ################################################
@@ -60,6 +62,7 @@ def ERG():
         w=vertexCount/math.log(vertexCount)
         propability=w/vertexCount
         app.sliderPropability.set(propability)
+        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
      ###############################################
      #    Отсутствие треугольников (теорема 10)    #
      ###############################################
@@ -67,18 +70,21 @@ def ERG():
         a=1/vertexCount
         propability=a/vertexCount
         app.sliderPropability.set(propability)
+        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ##############################################
     #    Феодальная раздробленность (стр. 48)    #
     ##############################################
     elif (selectedRadioButton==5):
         propability=1/(vertexCount**3)
         app.sliderPropability.set(propability)
+        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ###########################
     #    Империя (стр. 48)    #
     ###########################
     elif (selectedRadioButton==6):
         propability=vertexCount*math.log(vertexCount)/vertexCount
         app.sliderPropability.set(propability)
+        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     #########################################
     #    Гигантская компонента связности    #
     #########################################
