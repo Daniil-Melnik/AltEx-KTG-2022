@@ -45,70 +45,46 @@ def ERG():
     elif (selectedRadioButton==1):
         constantC=float(app.ERGsliderCConstant.get())
         propability=constantC*(math.log(vertexCount)/vertexCount)
-<<<<<<< HEAD
         app.ERGsliderPropability.set(propability)
-=======
-        app.sliderPropability.set(propability)
-        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
->>>>>>> 24ebee7d8e7164cc60603c5f489fb5696b447ee5
+        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ##################################
     #    Планарность (теорема 26)    #
     ##################################
     elif (selectedRadioButton==2):
         constantC=float(app.ERGsliderCConstant.get())
         propability=constantC/vertexCount
-<<<<<<< HEAD
         app.ERGsliderPropability.set(propability)
-=======
-        app.sliderPropability.set(propability)
-        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
->>>>>>> 24ebee7d8e7164cc60603c5f489fb5696b447ee5
+        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ################################################
     #    Присутствие треугольников (теорема 12)    #
     ################################################
     elif (selectedRadioButton==3):
         w=vertexCount/math.log(vertexCount)
         propability=w/vertexCount
-<<<<<<< HEAD
         app.ERGsliderPropability.set(propability)
-=======
-        app.sliderPropability.set(propability)
-        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
->>>>>>> 24ebee7d8e7164cc60603c5f489fb5696b447ee5
+        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
      ###############################################
      #    Отсутствие треугольников (теорема 10)    #
      ###############################################
     elif (selectedRadioButton==4):
         a=1/vertexCount
         propability=a/vertexCount
-<<<<<<< HEAD
-        app.ERGsliderPropability.set(propability)
-=======
-        app.sliderPropability.set(propability)
-        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
->>>>>>> 24ebee7d8e7164cc60603c5f489fb5696b447ee5
+        app.ERGsliderPropability.set(propability) 
+        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ##############################################
     #    Феодальная раздробленность (стр. 48)    #
     ##############################################
     elif (selectedRadioButton==5):
         propability=1/(vertexCount**3)
-<<<<<<< HEAD
-        app.ERGsliderPropability.set(propability)
-=======
-        app.sliderPropability.set(propability)
-        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
->>>>>>> 24ebee7d8e7164cc60603c5f489fb5696b447ee5
+        app.ERGsliderPropability.set(propability) 
+        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ###########################
     #    Империя (стр. 48)    #
     ###########################
     elif (selectedRadioButton==6):
         propability=vertexCount*math.log(vertexCount)/vertexCount
-<<<<<<< HEAD
-        app.ERGsliderPropability.set(propability)
-=======
-        app.sliderPropability.set(propability)
-        app.labelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
->>>>>>> 24ebee7d8e7164cc60603c5f489fb5696b447ee5
+        app.ERGsliderPropability.set(propability) 
+        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     #########################################
     #    Гигантская компонента связности    #
     #########################################
