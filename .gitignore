@@ -1,3 +1,4 @@
+.nolongerinuse/*
 .idea/*
 .dist/*
 .venv/*
@@ -5,4 +6,6 @@
 __pycache__/*
 Test/__pycache__/*
 
+graph.png
+stBRG.png
 st.png
