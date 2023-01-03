@@ -8,6 +8,10 @@
 ```bash
 pip3 install -r requirements.txt
 ```
+## Требования / Requirements:
+- Для корректного отображения приложения может потребоваться разрешение экрана ≥ 1920x1080
+- App may require screen resolution ≥ 1920x1080 to display correctly
+
 
 ## Пример работы программы на модели Erdős-Rényi:
 ![ERG](https://user-images.githubusercontent.com/77492646/210180061-2a438bdb-b592-4990-8ca3-566b1dff307b.gif)
