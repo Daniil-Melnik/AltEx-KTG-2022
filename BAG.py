@@ -130,9 +130,9 @@ class GraphBarabasiAlbert:
 
         nx.draw_circular(self.G,node_color=colorMapNode,edge_color = colorMapEdge ,with_labels = True)
         plt.axis('on')
-        plt.savefig("st.png")
+        plt.savefig("BAG.png")
         plt.clf()
-        topImg1 = PhotoImage(file="st.png")
+        topImg1 = PhotoImage(file="BAG.png")
         panel.configure(image=topImg1)
         panel.image = topImg1
         #print(self.LN)
@@ -172,10 +172,10 @@ class GraphBarabasiAlbert:
         textLoop.configure(text=LoopText)
         nx.draw(self.G, with_labels = True)
         plt.axis('on')
-        plt.savefig("st.png")
+        plt.savefig("BAG.png")
         plt.clf()
         
-        topImg = PhotoImage(file="st.png")
+        topImg = PhotoImage(file="BAG.png")
         panel.configure(image=topImg)
         panel.image = topImg
 
