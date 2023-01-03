@@ -107,10 +107,10 @@ def ERG():
         lbl1.configure(text="-", foreground='#ff0000')
     print(max(nx.connected_components(G)))
     plt.axis('on')
-    plt.savefig("st.png")
+    plt.savefig("ERG.png")
     plt.clf()
         
-    topImg = PhotoImage(file="st.png")
+    topImg = PhotoImage(file="ERG.png")
     panel.configure(image=topImg)
     panel.image = topImg
 

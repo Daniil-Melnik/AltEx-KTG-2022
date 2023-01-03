@@ -86,9 +86,9 @@ class GraphBarabasiAlbert:
 
         nx.draw(self.G, node_color=colorMapNode ,edge_color = colorMapEdge,with_labels = True)
         plt.axis('on')
-        plt.savefig("st.png")
+        plt.savefig("BRG.png")
         plt.clf()
-        topImg1 = PhotoImage(file="st.png")
+        topImg1 = PhotoImage(file="BRG.png")
         panel.configure(image=topImg1)
         panel.image = topImg1
 
@@ -113,10 +113,10 @@ class GraphBarabasiAlbert:
 
         nx.draw(self.G, with_labels = True)
         plt.axis('on')
-        plt.savefig("st.png")
+        plt.savefig("BRG.png")
         plt.clf()
         
-        topImg = PhotoImage(file="st.png")
+        topImg = PhotoImage(file="BRG.png")
         panel.configure(image=topImg)
         panel.image = topImg
 
@@ -189,10 +189,10 @@ class GraphBarabasiAlbert:
 
         nx.draw(ITOG, with_labels = True)
         plt.axis('on')
-        plt.savefig("stBRG.png")
+        plt.savefig("BRG.png")
         plt.clf()
 
-        topImg = PhotoImage(file="stBRG.png")
+        topImg = PhotoImage(file="BRG.png")
         panel.configure(image=topImg)
         panel.image = topImg
 
