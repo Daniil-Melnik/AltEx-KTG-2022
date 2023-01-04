@@ -445,7 +445,7 @@ class App(customtkinter.CTk):
         self.ERGlabelCConst = customtkinter.CTkLabel(master=self.ERGinputFrame,height=20,anchor=customtkinter.W,text=f"Константа C: {self.constantC}")
         self.ERGsliderVertex = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=1, to=26, number_of_steps=25)
         self.ERGsliderPropability = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=0, to=1, number_of_steps=100)
-        self.ERGsliderCConstant = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=0, to=10, number_of_steps=1000)
+        self.ERGsliderCConstant = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=0, to=6.4, number_of_steps=640)
         self.ERGsliderVertex.set(self.vertexCount)
         self.ERGsliderPropability.set(self.propability)
         self.ERGsliderCConstant.set(self.constantC)
@@ -624,7 +624,7 @@ class App(customtkinter.CTk):
         self.switcherTheme.select()
         customtkinter.set_appearance_mode("Dark")
         # select default frame
-        self.select_frame_by_name("BAG")
+        self.select_frame_by_name("BRG")
         # update sliders
         self.updateSliders(0)
     
@@ -644,12 +644,14 @@ class App(customtkinter.CTk):
 
     def updateCountSliderLabel(self,v):
         self.ERGlabelVertex.configure(text=f"Количество вершин в графе: {int(v)}")
-        if v > 20:
-            self.ERGsliderPropability.set(0.4)
-            self.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {0.4}")
-            self.ERGsliderPropability.configure(to=0.8, number_of_steps=80, button_color=App.Colors.sliderWarning,progress_color=App.Colors.sliderWarning)
-        else:
-            self.ERGsliderPropability.configure(to=1, number_of_steps=100, button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+        if (self.ERGselected.get() == 0 or self.ERGselected.get() == 7):    
+            if v > 20:
+                if self.ERGsliderPropability.get() > 0.8:
+                    self.ERGsliderPropability.set(0.4)
+                    self.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {0.4}")
+                self.ERGsliderPropability.configure(to=0.8, number_of_steps=80, button_color=App.Colors.sliderWarning,progress_color=App.Colors.sliderWarning)
+            else:
+                self.ERGsliderPropability.configure(to=1, number_of_steps=100, button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
                         
 
     def updateCountSliderLabelBAG(self,v):
@@ -657,13 +659,18 @@ class App(customtkinter.CTk):
 
     def updateSliders(self, v):
         if v in [0, 7]:
-            self.ERGsliderVertex.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+            self.ERGsliderVertex.configure(to=26, number_of_steps=25, state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderPropability.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderCConstant.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
-        elif v in [1, 2, 3, 4, 5, 6]:
-            self.ERGsliderVertex.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+        elif v in [1, 2, 3, 4, 5]:
+            self.ERGsliderVertex.configure(to=26, number_of_steps=25, state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderPropability.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
             self.ERGsliderCConstant.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+        elif v in [6]:
+            self.ERGsliderPropability.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
+            self.ERGsliderCConstant.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
+            self.ERGsliderVertex.configure(to=20, number_of_steps=19, button_color=App.Colors.sliderWarning,progress_color=App.Colors.sliderWarning)
+            
         
     def select_frame_by_name(self, name):
         # set button color for selected button
