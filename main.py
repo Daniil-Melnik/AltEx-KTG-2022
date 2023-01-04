@@ -186,7 +186,7 @@ def ERG():
         constantC=float(app.ERGsliderCConstant.get())
         propability=constantC*(math.log(vertexCount)/vertexCount)
         app.ERGsliderPropability.set(propability)
-        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
+        app.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ##################################
     #    Планарность (теорема 26)    #
     ##################################
@@ -194,7 +194,7 @@ def ERG():
         constantC=float(app.ERGsliderCConstant.get())
         propability=constantC/vertexCount
         app.ERGsliderPropability.set(propability)
-        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
+        app.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ################################################
     #    Присутствие треугольников (теорема 12)    #
     ################################################
@@ -202,7 +202,7 @@ def ERG():
         w=vertexCount/math.log(vertexCount)
         propability=w/vertexCount
         app.ERGsliderPropability.set(propability)
-        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
+        app.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
      ###############################################
      #    Отсутствие треугольников (теорема 10)    #
      ###############################################
@@ -210,21 +210,21 @@ def ERG():
         a=1/vertexCount
         propability=a/vertexCount
         app.ERGsliderPropability.set(propability) 
-        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
+        app.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ##############################################
     #    Феодальная раздробленность (стр. 48)    #
     ##############################################
     elif (selectedRadioButton==5):
         propability=1/(vertexCount**3)
         app.ERGsliderPropability.set(propability) 
-        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
+        app.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     ###########################
     #    Империя (стр. 48)    #
     ###########################
     elif (selectedRadioButton==6):
         propability=vertexCount*math.log(vertexCount)/vertexCount
         app.ERGsliderPropability.set(propability) 
-        app.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
+        app.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
     #########################################
     #    Гигантская компонента связности    #
     #########################################
@@ -320,6 +320,7 @@ class App(customtkinter.CTk):
         graphInfoFalse = "#9b2226"
         graphBackground = "#9b2226"
         sliderEnabled = "#2a9d8f"
+        sliderWarning = "#ff9e00"
         sliderDisabled = "#780000"
 
     def __init__(self): 
@@ -440,11 +441,11 @@ class App(customtkinter.CTk):
         self.propability = 0.5
         self.constantC = 1
         self.ERGlabelVertex = customtkinter.CTkLabel(master=self.ERGinputFrame,height=20,anchor=customtkinter.W,text=f"Количество вершин в графе: {self.vertexCount}")
-        self.ERGlabelTxtp = customtkinter.CTkLabel(master=self.ERGinputFrame,height=20,anchor=customtkinter.W,text=f"Вероятность появления ребер в графе: {self.propability}")
-        self.ERGlabelTxtc = customtkinter.CTkLabel(master=self.ERGinputFrame,height=20,anchor=customtkinter.W,text=f"Константа C: {self.constantC}")
+        self.ERGlabelPropability = customtkinter.CTkLabel(master=self.ERGinputFrame,height=20,anchor=customtkinter.W,text=f"Вероятность появления ребер в графе: {self.propability}")
+        self.ERGlabelCConst = customtkinter.CTkLabel(master=self.ERGinputFrame,height=20,anchor=customtkinter.W,text=f"Константа C: {self.constantC}")
         self.ERGsliderVertex = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=1, to=26, number_of_steps=25)
         self.ERGsliderPropability = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=0, to=1, number_of_steps=100)
-        self.ERGsliderCConstant = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=0, to=10, number_of_steps=1000)
+        self.ERGsliderCConstant = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=0, to=6.4, number_of_steps=640)
         self.ERGsliderVertex.set(self.vertexCount)
         self.ERGsliderPropability.set(self.propability)
         self.ERGsliderCConstant.set(self.constantC)
@@ -453,8 +454,8 @@ class App(customtkinter.CTk):
         self.ERGsliderCConstant.configure(command = lambda v=self.constantC: self.updateConstSliderLabel(v))
         #plotting elements
         self.ERGlabelVertex.grid(row=0, column=0, sticky="nswe", padx=10, pady=10)
-        self.ERGlabelTxtp.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
-        self.ERGlabelTxtc.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
+        self.ERGlabelPropability.grid(row=2, column=0, sticky="nswe", padx=10, pady=10)
+        self.ERGlabelCConst.grid(row=4, column=0, sticky="nswe",padx=10, pady=10)
         self.ERGsliderVertex.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
         self.ERGsliderPropability.grid(row=3, column=0, sticky="nswe", padx=10, pady=10)
         self.ERGsliderCConstant.grid(row=5, column=0, sticky="nswe", padx=10, pady=10)
@@ -623,7 +624,7 @@ class App(customtkinter.CTk):
         self.switcherTheme.select()
         customtkinter.set_appearance_mode("Dark")
         # select default frame
-        self.select_frame_by_name("BAG")
+        self.select_frame_by_name("BRG")
         # update sliders
         self.updateSliders(0)
     
@@ -636,26 +637,40 @@ class App(customtkinter.CTk):
     #################################################################################################################################################################################
     
     def updateConstSliderLabel(self,v):
-        self.ERGlabelTxtc.configure(text=f"Константа C: {float('{:.2f}'.format(v))}")
+        self.ERGlabelCConst.configure(text=f"Константа C: {float('{:.2f}'.format(v))}")
 
     def updatePropSliderLabel(self,v):
-        self.ERGlabelTxtp.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(v))}")
+        self.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(v))}")
 
     def updateCountSliderLabel(self,v):
         self.ERGlabelVertex.configure(text=f"Количество вершин в графе: {int(v)}")
-        
+        if (self.ERGselected.get() == 0 or self.ERGselected.get() == 7):    
+            if v > 20:
+                if self.ERGsliderPropability.get() > 0.8:
+                    self.ERGsliderPropability.set(0.4)
+                    self.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {0.4}")
+                self.ERGsliderPropability.configure(to=0.8, number_of_steps=80, button_color=App.Colors.sliderWarning,progress_color=App.Colors.sliderWarning)
+            else:
+                self.ERGsliderPropability.configure(to=1, number_of_steps=100, button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+                        
+
     def updateCountSliderLabelBAG(self,v):
         self.BAGlabelEdges.configure(text=f"Количество добавляемых ребер: {int(v)}")
 
     def updateSliders(self, v):
         if v in [0, 7]:
-            self.ERGsliderVertex.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+            self.ERGsliderVertex.configure(to=26, number_of_steps=25, state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderPropability.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderCConstant.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
-        elif v in [1, 2, 3, 4, 5, 6]:
-            self.ERGsliderVertex.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+        elif v in [1, 2, 3, 4, 5]:
+            self.ERGsliderVertex.configure(to=26, number_of_steps=25, state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderPropability.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
             self.ERGsliderCConstant.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+        elif v in [6]:
+            self.ERGsliderPropability.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
+            self.ERGsliderCConstant.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
+            self.ERGsliderVertex.configure(to=20, number_of_steps=19, button_color=App.Colors.sliderWarning,progress_color=App.Colors.sliderWarning)
+            
         
     def select_frame_by_name(self, name):
         # set button color for selected button
