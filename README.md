@@ -17,7 +17,7 @@ pip3 install -r requirements.txt
 ![ERG](https://user-images.githubusercontent.com/77492646/210180061-2a438bdb-b592-4990-8ca3-566b1dff307b.gif)
 
 ## Пример работы программы на модели Barabási–Albert:
-![BAG](https://user-images.githubusercontent.com/77492646/210408919-92f6531c-07fb-4c09-8ad7-6f291674e1aa.gif)
+![BAG](https://user-images.githubusercontent.com/77492646/210584577-9af5e64b-923c-4ee2-be98-7aecaf7e889c.gif)
 
 ## Пример работы программы на модели Bollobás–Riordan:
 ![BRG](https://user-images.githubusercontent.com/77492646/210543884-1155fe44-fe37-4868-890a-578867389e26.gif)
