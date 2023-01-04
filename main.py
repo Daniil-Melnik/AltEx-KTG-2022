@@ -397,6 +397,9 @@ def ERG():
     #    Гигантская компонента связности    #
     #########################################
     elif (selectedRadioButton==7):
+        propability=app.ERGsliderCConstant.get()/vertexCount
+        app.ERGsliderPropability.set(propability) 
+        app.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
         propability=float(app.ERGsliderPropability.get())
     ##############################################
     #                                            #
@@ -588,21 +591,21 @@ class App(customtkinter.CTk):
         self.ERGlabelRad = customtkinter.CTkLabel(master=self.ERGoptionsFrame,anchor=customtkinter.W,text='Способы задания графа:')
         self.ERGselected = IntVar(value=0)
         #radiobuttons
-        self.ERGradProbability = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,text='Вероятностный граф', 
+        self.ERGradProbability = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,  text='Вероятностный граф', 
             value=0, variable=self.ERGselected, command = lambda v=0: self.updateSliders(v))
-        self.ERGradConnectivity = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,text='Связность (теорема 13)', 
+        self.ERGradConnectivity = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame, text='Связность (теорема 13)', 
             value=1, variable=self.ERGselected, command = lambda v=1: self.updateSliders(v))
-        self.ERGradPlanarity = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,text='Планарность (теорема 26)', 
+        self.ERGradPlanarity = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,    text='Планарность (теорема 26)', 
             value=2, variable=self.ERGselected, command = lambda v=2: self.updateSliders(v))
-        self.ERGradNonTriangle = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,text='Присутствие треугольников (теорема 12)', 
+        self.ERGradNonTriangle = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,  text='Присутствие треугольников (теорема 12)', 
             value=3, variable=self.ERGselected, command = lambda v=3: self.updateSliders(v))
-        self.ERGradTriangle = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,text='Отсутствие треугольников (теорема 10)', 
+        self.ERGradTriangle = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,     text='Отсутствие треугольников (теорема 10)', 
             value=4, variable=self.ERGselected, command = lambda v=4: self.updateSliders(v))
-        self.ERGradFeudalFrag = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,text='Феодальная раздробленность (стр. 48)', 
+        self.ERGradFeudalFrag = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,   text='Феодальная раздробленность (стр. 48)', 
             value=5, variable=self.ERGselected, command = lambda v=5: self.updateSliders(v))
-        self.ERGradEmpire = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,text='Империя (стр. 48)', 
+        self.ERGradEmpire = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,       text='Империя (стр. 48)', 
             value=6, variable=self.ERGselected, command = lambda v=6: self.updateSliders(v))
-        self.ERGradGiantConnComp = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,text='Гигантская компонента связности', 
+        self.ERGradGiantConnComp = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,text='Гигантская компонента связности (теорема 16)', 
             value=7, variable=self.ERGselected, command = lambda v=7: self.updateSliders(v))
         #plotting elements
         self.ERGlabelRad.grid(
@@ -933,7 +936,7 @@ class App(customtkinter.CTk):
 
     def updateCountSliderLabel(self,v):
         self.ERGlabelVertex.configure(text=f"Количество вершин в графе: {int(v)}")
-        if (self.ERGselected.get() == 0 or self.ERGselected.get() == 7):    
+        if (self.ERGselected.get() == 0):    
             if v > 20:
                 if self.ERGsliderPropability.get() > 0.8:
                     self.ERGsliderPropability.set(0.4)
@@ -951,12 +954,12 @@ class App(customtkinter.CTk):
         self.BRGlabelEdges.configure(text=f"Количество вершин в разбитом графе: {int(v)}")
     
     def updateSliders(self, v):
-        if v in [0, 7]:
+        if v in [0]:
             self.ERGsliderVertex.configure(to=26, number_of_steps=25, state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderVertex.set(self.ERGsliderVertex.get())
             self.ERGsliderPropability.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderCConstant.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
-        elif v in [1, 2, 3, 4, 5]:
+        elif v in [1, 2, 3, 4, 5, 7]:
             self.ERGsliderVertex.configure(to=26, number_of_steps=25, state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderVertex.set(self.ERGsliderVertex.get())
             self.ERGsliderPropability.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
