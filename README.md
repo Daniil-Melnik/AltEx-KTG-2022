@@ -19,3 +19,5 @@ pip3 install -r requirements.txt
 ## Пример работы программы на модели Barabási–Albert:
 ![BAG](https://user-images.githubusercontent.com/77492646/210408919-92f6531c-07fb-4c09-8ad7-6f291674e1aa.gif)
 
+## Пример работы программы на модели Bollobás–Riordan:
+![BRG](https://user-images.githubusercontent.com/77492646/210543884-1155fe44-fe37-4868-890a-578867389e26.gif)
