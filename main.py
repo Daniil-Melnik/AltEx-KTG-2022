@@ -827,7 +827,7 @@ class App(customtkinter.CTk):
         self.switcherTheme.select()
         customtkinter.set_appearance_mode("Dark")
         # select default frame
-        self.select_frame_by_name("BRG")
+        self.select_frame_by_name("ERG")
         # update sliders
         self.updateSliders(0)
     
