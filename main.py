@@ -322,6 +322,7 @@ class BAG:
 
 
 
+
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -859,7 +860,7 @@ class App(customtkinter.CTk):
         #    input    #
         ###############
         self.BRGedgesCount = 1
-        self.BRGlabelEdges = customtkinter.CTkLabel(master=self.BRGinput,height=20,anchor=customtkinter.W,text=f"Количество вершин в разбитом графе: {self.BRGedgesCount}")
+        self.BRGlabelEdges = customtkinter.CTkLabel(master=self.BRGinput,height=20,anchor=customtkinter.W,text=f"Размер компоненты при разбиении (k): {self.BRGedgesCount}")
         self.BRGsliderEdges = customtkinter.CTkSlider(master=self.BRGinput,height=25,width=480,from_=1, to=2, number_of_steps=1, state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
         self.BRGlabelEdges.grid(
             row=0, column=0, sticky="nswe", padx=10, pady=10)
