@@ -274,7 +274,7 @@ class BAG:
         for vertex in self.Vertex:
             LoopText+=(vertex+' : '+str(self.LN[vertex]//2)+'\n')
         app.BAGgraphLoopCount.configure(text=LoopText)
-        nx.draw_circular(self.Graph,node_color=colorMapNode,edge_color = colorMapEdge ,with_labels = True)
+        nx.draw_circular(self.Graph,node_color=colorMapNode,edge_color=colorMapEdge,with_labels = True)
         plt.savefig("BAG.png", dpi=110) # 704x528
         plt.clf()
         topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("BAG.png")), dark_image=Image.open(os.path.join("BAG.png")),size=(app.S_G_WIDTH,app.S_G_HEIGHT))
@@ -310,7 +310,7 @@ class BAG:
         for v in self.Vertex:
             LoopText+=(v+' : '+str(self.LN[v]//2)+'\n')
         app.BAGgraphLoopCount.configure(text=LoopText)
-        nx.draw(self.Graph, with_labels = True)
+        nx.draw(self.Graph, connectionstyle=f'arc3, rad = 0.1', with_labels = True)
         plt.savefig("BAG.png", dpi=110) # 704x528
         plt.clf()
         topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("BAG.png")), dark_image=Image.open(os.path.join("BAG.png")),size=(app.S_G_WIDTH,app.S_G_HEIGHT))
@@ -424,7 +424,7 @@ def ERG():
         randValue=random.randint(0,100)/100
         if (randValue<=propability):
             Graph.add_edge(Edges[i][0],Edges[i][1])
-    if (selectedRadioButton==4):
+    if (selectedRadioButton==3):
         all_cliques = nx.enumerate_all_cliques(Graph)
         triad_cliques=[x for x in all_cliques if len(x)==3 ]
         if (len(triad_cliques)!=0):
@@ -662,7 +662,7 @@ class App(customtkinter.CTk):
         ############################################
         #    creating elements for buttonsFrame    #
         ############################################
-        self.ERGbtnCreate = customtkinter.CTkButton(master=self.ERGbuttonsFrame,text="Построить граф",height=35,width=480,command=ERG)
+        self.ERGbtnCreate = customtkinter.CTkButton(master=self.ERGbuttonsFrame,text="Построить граф",height=60,width=480,command=ERG)
         self.ERGbtnCreate.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
 
         #################################################################################################################################################################################
@@ -789,8 +789,8 @@ class App(customtkinter.CTk):
         self.edgesCount = 1
         self.BAGlabelEdges = customtkinter.CTkLabel(master=self.BAGbuttons,height=20,anchor=customtkinter.W,text=f"Количество добавляемых ребер: {self.edgesCount}")
         self.BAGsliderEdges = customtkinter.CTkSlider(master=self.BAGbuttons,height=25,width=480,from_=1, to=2, number_of_steps=1,state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
-        self.BAGbtnCreate = customtkinter.CTkButton(master=self.BAGbuttons,text="Построить граф заново",height=35,width=480,command=bag.newGraph)
-        self.BAGbtnAdd = customtkinter.CTkButton(master=self.BAGbuttons,text="Добавить вершину",height=35,width=480,command=bag.addVertex, state="disabled")
+        self.BAGbtnCreate = customtkinter.CTkButton(master=self.BAGbuttons,text="Построить граф заново",height=45,width=480,command=bag.newGraph)
+        self.BAGbtnAdd = customtkinter.CTkButton(master=self.BAGbuttons,text="Добавить вершину",height=45,width=480,command=bag.addVertex, state="disabled")
         self.BAGlabelEdges.grid(
             row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.BAGsliderEdges.grid(
