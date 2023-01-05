@@ -398,9 +398,9 @@ def ERG():
         propability=vertexCount*math.log(vertexCount)/vertexCount
         app.ERGsliderPropability.set(propability) 
         app.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
-    #########################################
-    #    Гигантская компонента связности    #
-    #########################################
+    #####################################################
+    #    Гигантская компонента связности (теорема 16)   #
+    #####################################################
     elif (selectedRadioButton==7):
         propability=app.ERGsliderCConstant.get()/vertexCount
         app.ERGsliderPropability.set(propability) 
