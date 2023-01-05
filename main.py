@@ -994,7 +994,7 @@ class App(customtkinter.CTk):
         elif v in [3, 4]:
             self.ERGsliderVertex.configure(from_=3, to=26, number_of_steps=23, state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderPropability.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
-            self.ERGsliderCConstant.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+            self.ERGsliderCConstant.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
             if self.ERGsliderVertex.get() == 1:
                 self.ERGsliderVertex.set(2)
                 self.ERGlabelVertex.configure(text="Количество вершин в графе: 2")
