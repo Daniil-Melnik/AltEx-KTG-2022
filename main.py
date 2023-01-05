@@ -405,7 +405,6 @@ def ERG():
         propability=app.ERGsliderCConstant.get()/vertexCount
         app.ERGsliderPropability.set(propability) 
         app.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {float('{:.2f}'.format(propability))}")
-        propability=float(app.ERGsliderPropability.get())
     ##############################################
     #                                            #
     #    постинициализация и вывод результата    #
