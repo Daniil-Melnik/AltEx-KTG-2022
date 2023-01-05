@@ -424,7 +424,7 @@ def ERG():
         randValue=random.randint(0,100)/100
         if (randValue<=propability):
             Graph.add_edge(Edges[i][0],Edges[i][1])
-    if (selectedRadioButton==4):
+    if (selectedRadioButton==3):
         all_cliques = nx.enumerate_all_cliques(Graph)
         triad_cliques=[x for x in all_cliques if len(x)==3 ]
         if (len(triad_cliques)!=0):
