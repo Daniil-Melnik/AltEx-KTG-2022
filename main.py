@@ -528,18 +528,30 @@ class App(customtkinter.CTk):
         #################################
         self.Menu = customtkinter.CTkFrame(self, corner_radius=0)
         self.MenuLabel = customtkinter.CTkLabel(self.Menu, text="  Случайные графы", image=self.imageLogo, compound="left", font=customtkinter.CTkFont(size=15, weight="bold"))
-        self.MenuButtonERG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=40, border_spacing=10, text="Модель Эрдёша-Реньи", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w", command=self.MenuButtonERG_event)
-        self.MenuButtonBAG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=40, border_spacing=10, text="Модель Барабаши-Альберт", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w", command=self.MenuButtonBAG_event)
-        self.MenuButtonBRG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=40, border_spacing=10, text="Модель Баллобаша-Риордана", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor="w", command=self.MenuButtonBRG_event)
+        self.MenuButtonERG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
+            text="Модель Эрдёша-Реньи", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonERG_event)
+        self.MenuButtonBAG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
+            text="Модель Барабаши-Альберт", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonBAG_event)
+        self.MenuButtonBRG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
+            text="Модель Баллобаша-Риордана", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonBRG_event)
+        self.MenuButtonBigERG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
+            text="Модель Эрдёша-Реньи \nна больших графах", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonERG_event)
+        self.MenuButtonBigBAG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
+            text="Модель Барабаши-Альберт \nна больших графах", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonBAG_event)
+        self.MenuButtonBigBRG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
+            text="Модель Баллобаша-Риордана \nна больших графах", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonBRG_event)
         self.switcherTheme = customtkinter.CTkSwitch(master=self.Menu, text="Темная тема ", command=self.changeThemeMode) # Dark theme switcher
         #plotting elements
         self.Menu.grid(row=0, column=0, sticky="nsew")
-        self.Menu.grid_rowconfigure(4, weight=1)
+        self.Menu.grid_rowconfigure(8, weight=1)
         self.MenuLabel.grid(row=0, column=0, padx=20, pady=20)
         self.MenuButtonERG.grid(row=1, column=0, sticky="nswe")
         self.MenuButtonBAG.grid(row=2, column=0, sticky="nswe")
         self.MenuButtonBRG.grid(row=3, column=0, sticky="nswe")
-        self.switcherTheme.grid(row=9, column=0, padx=10, pady=10, sticky="nswe")
+        # self.MenuButtonBigERG.grid(row=4, column=0, sticky="nswe")
+        # self.MenuButtonBigBAG.grid(row=5, column=0, sticky="nswe")
+        # self.MenuButtonBigBRG.grid(row=6, column=0, sticky="nswe")
+        self.switcherTheme.grid(row=11, column=0, padx=10, pady=10, sticky="nswe")
 
         #################################################################################################################################################################################
         #################################################################################################################################################################################
@@ -948,7 +960,7 @@ class App(customtkinter.CTk):
             if v > 20:
                 if self.ERGsliderPropability.get() > 0.8:
                     self.ERGsliderPropability.set(0.4)
-                    self.ERGlabelPropability.configure(text=f"Вероятность появления ребер в графе: {0.4}")
+                    self.ERGlabelPropability.configure(text="Вероятность появления ребер в графе: 0.4")
                 self.ERGsliderPropability.configure(to=0.8, number_of_steps=80, button_color=App.Colors.sliderWarning,progress_color=App.Colors.sliderWarning)
                 self.ERGsliderPropability.set(self.ERGsliderPropability.get())
             else:
@@ -967,7 +979,7 @@ class App(customtkinter.CTk):
             self.ERGsliderVertex.set(self.ERGsliderVertex.get())
             self.ERGsliderPropability.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderCConstant.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
-        elif v in [1, 2, 3, 4, 5, 7]:
+        elif v in [1, 2, 5, 7]:
             self.ERGsliderVertex.configure(to=26, number_of_steps=25, state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
             self.ERGsliderVertex.set(self.ERGsliderVertex.get())
             self.ERGsliderPropability.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
@@ -978,7 +990,17 @@ class App(customtkinter.CTk):
             self.ERGsliderVertex.configure(to=20, number_of_steps=19, button_color=App.Colors.sliderWarning,progress_color=App.Colors.sliderWarning)
             if self.ERGsliderVertex.get()>19:
                 self.ERGsliderVertex.set(10)
-                self.ERGlabelVertex.configure(text=f"Количество вершин в графе: {10}")
+                self.ERGlabelVertex.configure(text="Количество вершин в графе: 10")
+        elif v in [3, 4]:
+            self.ERGsliderVertex.configure(from_=3, to=26, number_of_steps=23, state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+            self.ERGsliderPropability.configure(state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
+            self.ERGsliderCConstant.configure(state="normal",button_color=App.Colors.sliderEnabled,progress_color=App.Colors.sliderEnabled)
+            if self.ERGsliderVertex.get() == 1:
+                self.ERGsliderVertex.set(2)
+                self.ERGlabelVertex.configure(text="Количество вершин в графе: 2")
+            else:
+                self.ERGsliderVertex.set(self.ERGsliderVertex.get())
+            
             
     def select_frame_by_name(self, name):
         # set button color for selected button
