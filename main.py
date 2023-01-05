@@ -4,19 +4,24 @@ import random
 import customtkinter
 import networkx as nx
 import matplotlib.pyplot as plt
-
 from tkinter import *
 from types import CellType
 from PIL import Image, ImageTk
 from tkinter.ttk import Checkbutton
 
 
+########################
+#    window scaling    #
+########################
+import config
+customtkinter.set_widget_scaling(config.scale)
+customtkinter.set_window_scaling(config.scale)
 
 
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-#  BAG
+#  Bollobas-Riordan model
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -80,7 +85,7 @@ class BRG:
             if v0 in edgesG[i]:
                 colorMapEdge[i]='red'
         nx.draw(self.Graph, node_color=colorMapNode ,edge_color = colorMapEdge,with_labels = True)
-        plt.savefig("BRG.png", dpi=135)
+        plt.savefig("BRG.png")
         plt.clf()
         topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("BRG.png")), dark_image=Image.open(os.path.join("BRG.png")),size=(app.M_G_WIDTH,app.M_G_HEIGHT))
         app.BRGgraphImage.configure(image=topImg)
@@ -98,7 +103,7 @@ class BRG:
         self.Graph.add_nodes_from(self.Vertex)
         self.Graph.add_edges_from(self.Edges)
         nx.draw(self.Graph, with_labels = True)
-        plt.savefig("BRG.png", dpi=135)
+        plt.savefig("BRG.png")
         plt.clf()
         topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("BRG.png")), dark_image=Image.open(os.path.join("BRG.png")),size=(app.M_G_WIDTH,app.M_G_HEIGHT))
         app.BRGgraphImage.configure(image=topImg)
@@ -165,7 +170,7 @@ class BRG:
             strMult+=("("+str(dk[0])+','+str(dk[1])+') : '+str(self.MainEdge[dk])+'\n')
         app.BRGgraphAliquotEdges.configure(text=strMult)
         nx.draw(ITOG, with_labels = True)
-        plt.savefig("BRG.png", dpi=135)
+        plt.savefig("BRG.png")
         plt.clf()
         topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("BRG.png")), dark_image=Image.open(os.path.join("BRG.png")),size=(app.M_G_WIDTH,app.M_G_HEIGHT))
         app.BRGgraphImage.configure(image=topImg)
@@ -176,7 +181,7 @@ class BRG:
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-#  BAG
+#  Barabashi-Albert model
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -275,7 +280,7 @@ class BAG:
             LoopText+=(vertex+' : '+str(self.LN[vertex]//2)+'\n')
         app.BAGgraphLoopCount.configure(text=LoopText)
         nx.draw_circular(self.Graph,node_color=colorMapNode,edge_color=colorMapEdge,with_labels = True)
-        plt.savefig("BAG.png", dpi=110) # 704x528
+        plt.savefig("BAG.png") # 704x528
         plt.clf()
         topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("BAG.png")), dark_image=Image.open(os.path.join("BAG.png")),size=(app.S_G_WIDTH,app.S_G_HEIGHT))
         app.BAGgraphImage.configure(image=topImg)
@@ -311,7 +316,7 @@ class BAG:
             LoopText+=(v+' : '+str(self.LN[v]//2)+'\n')
         app.BAGgraphLoopCount.configure(text=LoopText)
         nx.draw(self.Graph, connectionstyle=f'arc3, rad = 0.1', with_labels = True)
-        plt.savefig("BAG.png", dpi=110) # 704x528
+        plt.savefig("BAG.png") # 704x528
         plt.clf()
         topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("BAG.png")), dark_image=Image.open(os.path.join("BAG.png")),size=(app.S_G_WIDTH,app.S_G_HEIGHT))
         app.BAGgraphImage.configure(image=topImg)
@@ -326,7 +331,7 @@ class BAG:
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
-#  ERG Algorithm
+#  Erdos-Renyi model
 #################################################################################################################################################################################
 #################################################################################################################################################################################
 #################################################################################################################################################################################
@@ -460,7 +465,7 @@ def ERG():
     else:
         app.ERGlabelConnectivity.configure(fg_color=App.Colors.graphInfoFalse)
     # print(max(nx.connected_components(Graph)))
-    plt.savefig("ERG.png", dpi=150) # 960x720
+    plt.savefig("ERG.png") # 960x720
     topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("ERG.png")), dark_image=Image.open(os.path.join("ERG.png")),size=(app.G_WIDTH,app.G_HEIGHT))
     app.ERGgraphImage.configure(image=topImg)
 
