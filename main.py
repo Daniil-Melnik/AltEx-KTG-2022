@@ -13,9 +13,20 @@ from tkinter.ttk import Checkbutton
 ########################
 #    window scaling    #
 ########################
-import config
-customtkinter.set_widget_scaling(config.scale)
-customtkinter.set_window_scaling(config.scale)
+file = open('scale.config', 'r')
+try:
+    configScale = float(file.readline())
+    if 0.4 <= configScale <= 2:
+        customtkinter.set_widget_scaling(configScale)
+        customtkinter.set_window_scaling(configScale)
+    else:
+        customtkinter.set_widget_scaling(0.85)
+        customtkinter.set_window_scaling(0.85)
+except:
+    customtkinter.set_widget_scaling(0.85)
+    customtkinter.set_window_scaling(0.85)
+    
+file.close()
 
 
 #################################################################################################################################################################################
