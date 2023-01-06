@@ -1,3 +1,8 @@
+![Lines](https://img.shields.io/tokei/lines/github.com/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
+![CodeSize](https://img.shields.io/github/languages/code-size/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
+![LastCommint](https://img.shields.io/github/last-commit/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
+![Releases](https://img.shields.io/github/downloads/Daniil-Melnik/AltEx-KTG-2022/total?style=for-the-badge)
+
 # Реализация программы-калькулятора для вычисления характеристик случайных графов / Implementation of a program for calculating random graphs characteristics
 
 ## Участники разработки, студенты СПбГЭТУ (ЛЭТИ):
@@ -5,12 +10,11 @@
 - Лепов Алексей, гр. 1308.
 
 ## Установка / Installation:
+
+Для корректного отображения может потребоваться изменение float параметра (от 0.4 до 2) в первой строке файла конфигурации **`scale.config`** / For correct display, you may need to change the float parameter (from 0.4 to 2) in the first line **`scale.config`**
+
 ```bash
 pip3 install -r requirements.txt
-```
-### Для корректного отображения может потребоваться изменение параметра **`scale`** в **`config.py`** / For correct display, you may need to change the **`scale`** parameter in **`config.py`**
-```py
-scale = 0.85
 ```
 
 ## Пример работы программы на модели Erdős-Rényi:
