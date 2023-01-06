@@ -23,5 +23,5 @@
 
 scale = 0.85
 
-# For large screens, this figure can be >= 1
+# For large screens, this scale value can be >= 1
 # Для больших экранов этот показатель может быть >= 1
