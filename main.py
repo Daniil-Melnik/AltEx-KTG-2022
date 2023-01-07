@@ -122,6 +122,13 @@ class BRG:
         app.BRGvertexCount = 0
         app.BRGsliderEdges.configure(to=2, number_of_steps=1, state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
         app.updateCountSliderLabelBRG(1)
+        app.BRGgraphAliquotEdges.configure(state=NORMAL)
+        app.BRGgraphLoopCount.configure(state=NORMAL)
+        app.BRGgraphAliquotEdges.delete('0.0', END)
+        app.BRGgraphLoopCount.delete('0.0', END)
+        app.BRGgraphAliquotEdges.configure(state=DISABLED)
+        app.BRGgraphLoopCount.configure(state=DISABLED)
+        
 
     def breakGraph(self):
         k=int(app.BRGsliderEdges.get())
@@ -172,14 +179,20 @@ class BRG:
         for i in range(len(self.MainGraph)):
             VI.append(str(i))
             loopstr+= (str(i)+" : "+str(self.MainGraph[i].number_of_edges())+"\n")
-        app.BRGgraphLoopCount.configure(text=loopstr)
+        # app.BRGgraphLoopCount.configure(text=loopstr)
+        app.BRGgraphLoopCount.configure(state=NORMAL)
+        app.BRGgraphLoopCount.insert(END, loopstr+"\n")
+        app.BRGgraphLoopCount.configure(state=DISABLED)
         ITOG.add_nodes_from(VI)
         strMult = ""
         for dk in self.MainEdge:
             for i in range (self.MainEdge[dk]):
                 ITOG.add_edge(str(dk[0]), str(dk[1]))
             strMult+=("("+str(dk[0])+','+str(dk[1])+') : '+str(self.MainEdge[dk])+'\n')
-        app.BRGgraphAliquotEdges.configure(text=strMult)
+        # app.BRGgraphAliquotEdges.configure(text=strMult)
+        app.BRGgraphAliquotEdges.configure(state=NORMAL)
+        app.BRGgraphAliquotEdges.insert(END, loopstr+"\n")
+        app.BRGgraphAliquotEdges.configure(state=DISABLED)
         nx.draw(ITOG, with_labels = True)
         plt.savefig("BRG.png", dpi=200)
         plt.clf()
@@ -281,22 +294,46 @@ class BAG:
         strConnDeg=""
         for vertex in self.Vertex:
             strFactDeg+=(vertex+' : '+str(self.Graph.degree(vertex))+'\n')
-        app.BAGgraphDeg.configure(text=strFactDeg)
+        # app.BAGgraphDeg.configure(text=strFactDeg)
+        app.BAGgraphDeg.configure(state=NORMAL)
+        app.BAGgraphDeg.insert(END, strFactDeg+"\n")
+        app.BAGgraphDeg.configure(state=DISABLED)
         for vertex in self.Vertex:
             strConnDeg+=(vertex+' : '+str(self.Graph.degree(vertex)-self.LN[vertex]-self.ME[vertex])+'\n')
-        app.BAGgraphConnDeg.configure(text=strConnDeg)
-        app.BAGgraphAddedEdges.configure(text=strAddEdge)
+        # app.BAGgraphConnDeg.configure(text=strConnDeg)
+        app.BAGgraphConnDeg.configure(state=NORMAL)
+        app.BAGgraphConnDeg.insert(END, strConnDeg+"\n")
+        app.BAGgraphConnDeg.configure(state=DISABLED)
+        # app.BAGgraphAddedEdges.configure(text=strAddEdge)
+        app.BAGgraphAddedEdges.configure(state=NORMAL)
+        app.BAGgraphAddedEdges.insert(END, strAddEdge+"\n")
+        app.BAGgraphAddedEdges.configure(state=DISABLED)
         LoopText = ""
         for vertex in self.Vertex:
             LoopText+=(vertex+' : '+str(self.LN[vertex]//2)+'\n')
-        app.BAGgraphLoopCount.configure(text=LoopText)
+        # app.BAGgraphLoopCount.configure(text=LoopText)
+        app.BAGgraphLoopCount.configure(state=NORMAL)
+        app.BAGgraphLoopCount.insert(END, LoopText+"\n")
+        app.BAGgraphLoopCount.configure(state=DISABLED)
         nx.draw_circular(self.Graph,node_color=colorMapNode,edge_color=colorMapEdge,with_labels = True)
         plt.savefig("BAG.png", dpi=200)
         plt.clf()
         topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("BAG.png")), dark_image=Image.open(os.path.join("BAG.png")),size=(app.S_G_WIDTH,app.S_G_HEIGHT))
         app.BAGgraphImage.configure(image=topImg)
 
-    def newGraph(self):        
+    def newGraph(self):
+        app.BAGgraphDeg.configure(state=NORMAL)
+        app.BAGgraphConnDeg.configure(state=NORMAL)
+        app.BAGgraphLoopCount.configure(state=NORMAL)
+        app.BAGgraphAddedEdges.configure(state=NORMAL)
+        app.BAGgraphDeg.delete('0.0', END)
+        app.BAGgraphConnDeg.delete('0.0', END)
+        app.BAGgraphLoopCount.delete('0.0', END)
+        app.BAGgraphAddedEdges.delete('0.0', END)
+        app.BAGgraphDeg.configure(state=DISABLED)
+        app.BAGgraphConnDeg.configure(state=DISABLED)
+        app.BAGgraphLoopCount.configure(state=DISABLED)
+        app.BAGgraphAddedEdges.configure(state=DISABLED)
         selectedSeed = app.BAGselectedSeed.get()
         plt.clf()
         if (selectedSeed == 0):
@@ -318,14 +355,23 @@ class BAG:
             self.ME[v]=0
         for v in self.Vertex:
             strFactDeg+=(v+' : '+str(self.Graph.degree(v))+'\n')
-        app.BAGgraphDeg.configure(text=strFactDeg)
+        # app.BAGgraphDeg.configure(text=strFactDeg)
+        app.BAGgraphDeg.configure(state=NORMAL)
+        app.BAGgraphDeg.insert(END, strFactDeg+"\n")
+        app.BAGgraphDeg.configure(state=DISABLED)
         for v in self.Vertex:
             strConnDeg+=(v+' : '+str(self.Graph.degree(v)-self.LN[v]-self.ME[v])+'\n')
-        app.BAGgraphConnDeg.configure(text=strConnDeg)
+        # app.BAGgraphConnDeg.configure(text=strConnDeg)
+        app.BAGgraphConnDeg.configure(state=NORMAL)
+        app.BAGgraphConnDeg.insert(END, strConnDeg+"\n")
+        app.BAGgraphConnDeg.configure(state=DISABLED)
         LoopText = ""
         for v in self.Vertex:
             LoopText+=(v+' : '+str(self.LN[v]//2)+'\n')
-        app.BAGgraphLoopCount.configure(text=LoopText)
+        # app.BAGgraphLoopCount.configure(text=LoopText)
+        app.BAGgraphLoopCount.configure(state=NORMAL)
+        app.BAGgraphLoopCount.insert(END, LoopText+"\n")
+        app.BAGgraphLoopCount.configure(state=DISABLED)
         nx.draw(self.Graph, connectionstyle=f'arc3, rad = 0.1', with_labels = True)
         plt.savefig("BAG.png", dpi=200)
         plt.clf()
@@ -720,10 +766,11 @@ class App(customtkinter.CTk):
         self.BAGgraphInfoConnDeg = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=185, height=self.S_G_HEIGHT-50, corner_radius=10)
         self.BAGgraphInfoAddedEdges = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=185, height=self.S_G_HEIGHT-50, corner_radius=10)
         self.BAGgraphInfoLoopCount = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=185, height=self.S_G_HEIGHT-50, corner_radius=10)
-        self.BAGgraphDeg = customtkinter.CTkLabel(master=self.BAGgraphInfoDeg,width=175,height=self.S_G_HEIGHT-70,anchor=customtkinter.CENTER,text='')
-        self.BAGgraphConnDeg = customtkinter.CTkLabel(master=self.BAGgraphInfoConnDeg,width=175,height=self.S_G_HEIGHT-70,anchor=customtkinter.CENTER,text='')
-        self.BAGgraphAddedEdges = customtkinter.CTkLabel(master=self.BAGgraphInfoAddedEdges,width=175,height=self.S_G_HEIGHT-70,anchor=customtkinter.CENTER,text='')
-        self.BAGgraphLoopCount = customtkinter.CTkLabel(master=self.BAGgraphInfoLoopCount,width=175,height=self.S_G_HEIGHT-70,anchor=customtkinter.CENTER,text='')
+        
+        self.BAGgraphDeg = customtkinter.CTkTextbox(master=self.BAGgraphInfoDeg,width=165,height=self.S_G_HEIGHT-70)
+        self.BAGgraphConnDeg = customtkinter.CTkTextbox(master=self.BAGgraphInfoConnDeg,width=165,height=self.S_G_HEIGHT-70)
+        self.BAGgraphAddedEdges = customtkinter.CTkTextbox(master=self.BAGgraphInfoAddedEdges,width=165,height=self.S_G_HEIGHT-70)
+        self.BAGgraphLoopCount = customtkinter.CTkTextbox(master=self.BAGgraphInfoLoopCount,width=165,height=self.S_G_HEIGHT-70)
         self.BAGgraph.grid(
             row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,0))
         self.BAGgraphVisualizer.grid(
@@ -749,11 +796,11 @@ class App(customtkinter.CTk):
         self.BAGgraphInfoLoopCount.grid(
             row=1, column=3, sticky="nswe", padx=(10,10), pady=(10,10))
         self.BAGgraphDeg.grid(
-            row=0, column=0, sticky="nswe", padx=(10,0), pady=(10,10))
+            row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
         self.BAGgraphConnDeg.grid(
-            row=0, column=0, sticky="nswe", padx=(10,0), pady=(10,10))
+            row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
         self.BAGgraphAddedEdges.grid(
-            row=0, column=0, sticky="nswe", padx=(10,0), pady=(10,10))
+            row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
         self.BAGgraphLoopCount.grid(
             row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
         # parameters window
@@ -853,8 +900,8 @@ class App(customtkinter.CTk):
         self.BRGgraphInfoLoopCountLabel = customtkinter.CTkLabel(master=self.BRGgraphInfo,anchor=customtkinter.CENTER,text='Количество петель:',height=20)
         self.BRGgraphInfoAddedEdges = customtkinter.CTkFrame(master=self.BRGgraphInfo, width=285, height=self.M_G_HEIGHT-50, corner_radius=10)
         self.BRGgraphInfoLoopCount = customtkinter.CTkFrame(master=self.BRGgraphInfo, width=285, height=self.M_G_HEIGHT-50, corner_radius=10)
-        self.BRGgraphAliquotEdges = customtkinter.CTkLabel(master=self.BRGgraphInfoAddedEdges,width=275,height=self.M_G_HEIGHT-70,anchor=customtkinter.CENTER,text='')
-        self.BRGgraphLoopCount = customtkinter.CTkLabel(master=self.BRGgraphInfoLoopCount,width=275,height=self.M_G_HEIGHT-70,anchor=customtkinter.CENTER,text='')
+        self.BRGgraphAliquotEdges = customtkinter.CTkTextbox(master=self.BRGgraphInfoAddedEdges,width=275,height=self.M_G_HEIGHT-70,state=DISABLED)
+        self.BRGgraphLoopCount = customtkinter.CTkTextbox(master=self.BRGgraphInfoLoopCount,width=275,height=self.M_G_HEIGHT-70,state=DISABLED)
         self.BRGgraph.grid(
             row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,0))
         self.BRGgraphVisualizer.grid(
@@ -872,7 +919,7 @@ class App(customtkinter.CTk):
         self.BRGgraphInfoLoopCount.grid(
             row=1, column=3, sticky="nswe", padx=(10,10), pady=(10,10))
         self.BRGgraphAliquotEdges.grid(
-            row=0, column=0, sticky="nswe", padx=(10,0), pady=(10,10))
+            row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
         self.BRGgraphLoopCount.grid(
             row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
         # parameters window
