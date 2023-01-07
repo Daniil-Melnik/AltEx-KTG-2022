@@ -1,6 +1,7 @@
 import os
 import math
 import random
+import tkinter
 import customtkinter
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -46,6 +47,12 @@ class BRG:
         self.Deg={}
     
     def addVertex(self):
+        if len(self.Vertex)>=24:
+            app.BRGbtnAdd.configure(state="disabled")
+        if len(self.Vertex)==0:
+            app.BRGbtnBreak.configure(state="disabled")
+        else:
+            app.BRGbtnBreak.configure(state="normal")
         colorMapEdge=[]
         for i in range(self.Graph.number_of_edges()):
             colorMapEdge.append('black')
@@ -128,78 +135,83 @@ class BRG:
         app.BRGgraphLoopCount.delete('0.0', END)
         app.BRGgraphAliquotEdges.configure(state=DISABLED)
         app.BRGgraphLoopCount.configure(state=DISABLED)
+        app.BRGbtnAdd.configure(state=NORMAL)
+        app.BRGbtnBreak.configure(state=DISABLED)
         
-
     def breakGraph(self):
         k=int(app.BRGsliderEdges.get())
-        numG=self.Graph.number_of_nodes()//k
-        vertex=[]
-        edge=[]
-        for v in self.Graph.nodes():
-            vertex.append(v)
-        for e in self.Graph.edges():
-            edge.append(e)
-        print(vertex[0])
-        print(edge[0])
-        for i in range(numG):
-            MainEdges = {}
-            Vertex1=[]
-            Edge1=[]
-            Graph1=nx.MultiGraph()
-            for j in range (i*k, (i+1)*k):
-                Vertex1.append(vertex[j])
-            Graph1.add_nodes_from(Vertex1)
+        if len(self.Vertex) % k == 0:
+            numG=self.Graph.number_of_nodes()//k
+            vertex=[]
+            edge=[]
+            for v in self.Graph.nodes():
+                vertex.append(v)
+            for e in self.Graph.edges():
+                edge.append(e)
+            print(vertex[0])
+            print(edge[0])
+            for i in range(numG):
+                MainEdges = {}
+                Vertex1=[]
+                Edge1=[]
+                Graph1=nx.MultiGraph()
+                for j in range (i*k, (i+1)*k):
+                    Vertex1.append(vertex[j])
+                Graph1.add_nodes_from(Vertex1)
+                for e in edge:
+                    if ((e[0] in Vertex1) and (e[1] in Vertex1)):
+                        Edge1.append(e)
+                Graph1.add_edges_from(Edge1)
+                self.MainGraph.append(Graph1)
+                nx.draw(Graph1, with_labels = True)
+                plt.show()
+                plt.clf()
+            print(len(self.MainGraph))
+            for i in range(len(self.MainGraph)):
+                for j in range(i, len(self.MainGraph)):
+                    self.MainEdge[tuple([i, j])] = 0
             for e in edge:
-                if ((e[0] in Vertex1) and (e[1] in Vertex1)):
-                    Edge1.append(e)
-            Graph1.add_edges_from(Edge1)
-            self.MainGraph.append(Graph1)
-            nx.draw(Graph1, with_labels = True)
-            plt.show()
+                e1 = -1
+                e2 = -1
+                for i in range (len(self.MainGraph)):
+                    if e[0] in self.MainGraph[i]:
+                        e1 = i
+                for i in range (len(self.MainGraph)):
+                    if e[1] in self.MainGraph[i]:
+                        e2 = i
+                t = self.MainEdge[tuple([e1, e2])] + 1
+                self.MainEdge[tuple([e1, e2])] = t
+            print(self.MainEdge)
+            ITOG = nx.MultiGraph()
+            VI=[]
+            loopstr = ""
+            for i in range(len(self.MainGraph)):
+                VI.append(str(i))
+                loopstr+= (str(i)+" : "+str(self.MainGraph[i].number_of_edges())+"\n")
+            # app.BRGgraphLoopCount.configure(text=loopstr)
+            app.BRGgraphLoopCount.configure(state=NORMAL)
+            app.BRGgraphLoopCount.insert(END, loopstr+"\n")
+            app.BRGgraphLoopCount.configure(state=DISABLED)
+            ITOG.add_nodes_from(VI)
+            strMult = ""
+            for dk in self.MainEdge:
+                for i in range (self.MainEdge[dk]):
+                    ITOG.add_edge(str(dk[0]), str(dk[1]))
+                strMult+=("("+str(dk[0])+','+str(dk[1])+') : '+str(self.MainEdge[dk])+'\n')
+            # app.BRGgraphAliquotEdges.configure(text=strMult)
+            app.BRGgraphAliquotEdges.configure(state=NORMAL)
+            app.BRGgraphAliquotEdges.insert(END, loopstr+"\n")
+            app.BRGgraphAliquotEdges.configure(state=DISABLED)
+            nx.draw(ITOG, with_labels = True)
+            plt.savefig("BRG.png", dpi=200)
             plt.clf()
-        print(len(self.MainGraph))
-        for i in range(len(self.MainGraph)):
-            for j in range(i, len(self.MainGraph)):
-                self.MainEdge[tuple([i, j])] = 0
-        for e in edge:
-            e1 = -1
-            e2 = -1
-            for i in range (len(self.MainGraph)):
-                if e[0] in self.MainGraph[i]:
-                    e1 = i
-            for i in range (len(self.MainGraph)):
-                if e[1] in self.MainGraph[i]:
-                    e2 = i
-            t = self.MainEdge[tuple([e1, e2])] + 1
-            self.MainEdge[tuple([e1, e2])] = t
-        print(self.MainEdge)
-        ITOG = nx.MultiGraph()
-        VI=[]
-        loopstr = ""
-        for i in range(len(self.MainGraph)):
-            VI.append(str(i))
-            loopstr+= (str(i)+" : "+str(self.MainGraph[i].number_of_edges())+"\n")
-        # app.BRGgraphLoopCount.configure(text=loopstr)
-        app.BRGgraphLoopCount.configure(state=NORMAL)
-        app.BRGgraphLoopCount.insert(END, loopstr+"\n")
-        app.BRGgraphLoopCount.configure(state=DISABLED)
-        ITOG.add_nodes_from(VI)
-        strMult = ""
-        for dk in self.MainEdge:
-            for i in range (self.MainEdge[dk]):
-                ITOG.add_edge(str(dk[0]), str(dk[1]))
-            strMult+=("("+str(dk[0])+','+str(dk[1])+') : '+str(self.MainEdge[dk])+'\n')
-        # app.BRGgraphAliquotEdges.configure(text=strMult)
-        app.BRGgraphAliquotEdges.configure(state=NORMAL)
-        app.BRGgraphAliquotEdges.insert(END, loopstr+"\n")
-        app.BRGgraphAliquotEdges.configure(state=DISABLED)
-        nx.draw(ITOG, with_labels = True)
-        plt.savefig("BRG.png", dpi=200)
-        plt.clf()
-        topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("BRG.png")), dark_image=Image.open(os.path.join("BRG.png")),size=(app.M_G_WIDTH,app.M_G_HEIGHT))
-        app.BRGgraphImage.configure(image=topImg)
-
-
+            topImg = customtkinter.CTkImage(light_image=Image.open(os.path.join("BRG.png")), dark_image=Image.open(os.path.join("BRG.png")),size=(app.M_G_WIDTH,app.M_G_HEIGHT))
+            app.BRGgraphImage.configure(image=topImg)
+        else:
+            print("Ошибка! Количество вершин в графе при разбиении должено быть кратено размеру компоненты!")
+            tkinter.messagebox.showerror(title="Ошибка!", message="Количество вершин в графе при разбиении должено быть кратено размеру компоненты!")
+            
+            
 
 
 #################################################################################################################################################################################
