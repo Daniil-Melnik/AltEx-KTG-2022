@@ -678,7 +678,7 @@ class App(customtkinter.CTk):
         ############################################
         #    creating elements for optionsFrame    #
         ############################################
-        self.ERGlabelRad = customtkinter.CTkLabel(master=self.ERGoptionsFrame,anchor=customtkinter.W,text='Способы задания графа:')
+        self.ERGlabelRad = customtkinter.CTkLabel(master=self.ERGoptionsFrame,anchor=customtkinter.W,text='Способы задания графа:', height=25)
         self.ERGselected = IntVar(value=0)
         #radiobuttons
         self.ERGradProbability = customtkinter.CTkRadioButton(master=self.ERGoptionsFrame,  text='Вероятностный граф', 
@@ -699,32 +699,32 @@ class App(customtkinter.CTk):
             value=7, variable=self.ERGselected, command = lambda v=7: self.updateSliders(v))
         #plotting elements
         self.ERGlabelRad.grid(
-            row=0, column=0, sticky="nswe", padx=10, pady=10)
+            row=0, column=0, sticky="nswe", padx=10, pady=12)
         self.ERGradProbability.grid(
-            row=1, column=0, sticky="nswe", padx=10, pady=10)
+            row=1, column=0, sticky="nswe", padx=10, pady=12)
         self.ERGradConnectivity.grid(
-            row=2, column=0, sticky="nswe", padx=10, pady=10)
+            row=2, column=0, sticky="nswe", padx=10, pady=12)
         self.ERGradPlanarity.grid(
-            row=3, column=0, sticky="nswe", padx=10, pady=10)
+            row=3, column=0, sticky="nswe", padx=10, pady=12)
         self.ERGradNonTriangle.grid(
-            row=4, column=0, sticky="nswe", padx=10, pady=10)
+            row=4, column=0, sticky="nswe", padx=10, pady=12)
         self.ERGradTriangle.grid(
-            row=5, column=0, sticky="nswe", padx=10, pady=10)
+            row=5, column=0, sticky="nswe", padx=10, pady=12)
         self.ERGradFeudalFrag.grid(
-            row=6, column=0, sticky="nswe", padx=10, pady=10)
+            row=6, column=0, sticky="nswe", padx=10, pady=12)
         self.ERGradEmpire.grid(
-            row=7, column=0, sticky="nswe", padx=10, pady=10)
+            row=7, column=0, sticky="nswe", padx=10, pady=12)
         self.ERGradGiantConnComp.grid(
-            row=8, column=0, sticky="nswe", padx=10, pady=10)
+            row=8, column=0, sticky="nswe", padx=10, pady=12)
         ##########################################
         #    creating elements for inputFrame    #
         ##########################################
         self.vertexCount = 8
         self.propability = 0.5
         self.constantC = 1
-        self.ERGlabelVertex = customtkinter.CTkLabel(master=self.ERGinputFrame,height=20,anchor=customtkinter.W,text=f"Количество вершин в графе: {self.vertexCount}")
-        self.ERGlabelPropability = customtkinter.CTkLabel(master=self.ERGinputFrame,height=20,anchor=customtkinter.W,text=f"Вероятность появления ребер в графе: {self.propability}")
-        self.ERGlabelCConst = customtkinter.CTkLabel(master=self.ERGinputFrame,height=20,anchor=customtkinter.W,text=f"Константа C: {self.constantC}")
+        self.ERGlabelVertex = customtkinter.CTkLabel(master=self.ERGinputFrame,height=25,anchor=customtkinter.W,text=f"Количество вершин в графе: {self.vertexCount}")
+        self.ERGlabelPropability = customtkinter.CTkLabel(master=self.ERGinputFrame,height=25,anchor=customtkinter.W,text=f"Вероятность появления ребер в графе: {self.propability}")
+        self.ERGlabelCConst = customtkinter.CTkLabel(master=self.ERGinputFrame,height=25,anchor=customtkinter.W,text=f"Константа C: {self.constantC}")
         self.ERGsliderVertex = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=1, to=26, number_of_steps=25)
         self.ERGsliderPropability = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=0, to=1, number_of_steps=100)
         self.ERGsliderCConstant = customtkinter.CTkSlider(master=self.ERGinputFrame,height=25,width=480,from_=0, to=6.4, number_of_steps=640)
@@ -750,7 +750,7 @@ class App(customtkinter.CTk):
         ############################################
         #    creating elements for buttonsFrame    #
         ############################################
-        self.ERGbtnCreate = customtkinter.CTkButton(master=self.ERGbuttonsFrame,text="Построить граф",height=60,width=480,command=ERG)
+        self.ERGbtnCreate = customtkinter.CTkButton(master=self.ERGbuttonsFrame,text="Построить граф",height=50,width=480,command=ERG)
         #plotting elements
         self.ERGbtnCreate.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
 
