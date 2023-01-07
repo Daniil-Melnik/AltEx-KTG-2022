@@ -1,5 +1,6 @@
 ![Lines](https://img.shields.io/tokei/lines/github.com/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
 ![CodeSize](https://img.shields.io/github/languages/code-size/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
+![Repo](https://img.shields.io/github/repo-size/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
 ![LastCommint](https://img.shields.io/github/last-commit/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
 ![Releases](https://img.shields.io/github/downloads/Daniil-Melnik/AltEx-KTG-2022/total?style=for-the-badge)
 
