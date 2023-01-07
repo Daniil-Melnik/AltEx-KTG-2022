@@ -544,13 +544,13 @@ class App(customtkinter.CTk):
     HEIGHT = 830
     # E-R graph scale
     G_WIDTH = 960
-    G_HEIGHT = 720
+    G_HEIGHT = 730
     # B-A graph scale
-    M_G_WIDTH = 864
-    M_G_HEIGHT = 648
+    M_G_WIDTH = 900
+    M_G_HEIGHT = 668
     # B-R graph scale
-    S_G_WIDTH = 704
-    S_G_HEIGHT = 528
+    S_G_WIDTH = 834
+    S_G_HEIGHT = 625
     
     class Colors:
         graphInfoTrue = "#84a98c"
@@ -590,12 +590,12 @@ class App(customtkinter.CTk):
             text="Модель Барабаши-Альберт", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonBAG_event)
         self.MenuButtonBRG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
             text="Модель Баллобаша-Риордана", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonBRG_event)
-        self.MenuButtonBigERG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
-            text="Модель Эрдёша-Реньи \nна больших графах", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonERG_event)
-        self.MenuButtonBigBAG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
-            text="Модель Барабаши-Альберт \nна больших графах", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonBAG_event)
-        self.MenuButtonBigBRG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
-            text="Модель Баллобаша-Риордана \nна больших графах", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonBRG_event)
+        # self.MenuButtonBigERG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
+        #     text="Модель Эрдёша-Реньи \nна больших графах", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonERG_event)
+        # self.MenuButtonBigBAG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
+        #     text="Модель Барабаши-Альберт \nна больших графах", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonBAG_event)
+        # self.MenuButtonBigBRG = customtkinter.CTkButton(self.Menu, corner_radius=0, height=50, border_spacing=10, 
+        #     text="Модель Баллобаша-Риордана \nна больших графах", fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"), anchor=customtkinter.W, command=self.MenuButtonBRG_event)
         self.switcherTheme = customtkinter.CTkSwitch(master=self.Menu, text="Темная тема ", command=self.changeThemeMode) # Dark theme switcher
         #plotting elements
         self.Menu.grid(row=0, column=0, sticky="nsew")
@@ -617,6 +617,9 @@ class App(customtkinter.CTk):
         #################################################################################################################################################################################
         #################################################################################################################################################################################
         
+        ################
+        #    frames    #
+        ################
         self.FrameERG = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.FrameERG.rowconfigure(14, weight=10)
         self.FrameERG.columnconfigure(0, weight=1)
@@ -627,7 +630,7 @@ class App(customtkinter.CTk):
         self.ERGgraphFrame.grid(
             row=0, column=0, sticky="nswe", padx=(10,0), pady=(10,10))
         self.ERGgraphVisualizeFrame.grid(
-            row=0, column=0, sticky="nswe", padx=10, pady=10)
+            row=0, column=0, sticky="nswe", padx=10, pady=(10,0))
         self.ERGgraphInfoFrame.grid(
             row=1, column=0, sticky="nswe", padx=10, pady=10)
         # Parameters window - right one
@@ -643,7 +646,6 @@ class App(customtkinter.CTk):
             row=1, column=0, sticky="nswe", padx=10, pady=10)
         self.ERGbuttonsFrame.grid(
             row=2, column=0, sticky="nswe", padx=10, pady=10)
-        
         ##########################################
         #    creating elements for graphFrame    #
         ##########################################
@@ -652,15 +654,15 @@ class App(customtkinter.CTk):
         self.ERGlabelConnectivity = customtkinter.CTkLabel(master=self.ERGgraphInfoFrame,width=(self.G_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Связность")
         self.ERGlabelPlanarity = customtkinter.CTkLabel(master=self.ERGgraphInfoFrame,width=(self.G_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Планарность")
         self.ERGlabelTrianglesPresence= customtkinter.CTkLabel(master=self.ERGgraphInfoFrame,width=(self.G_WIDTH/3)-10,height=50,bg_color=App.Colors.graphInfoFalse,text="Наличие треугольников")
+        #plotting elements
         self.ERGgraphImage.grid(
             row=0, column=0, sticky="nswe", padx=0, pady=0)
         self.ERGlabelConnectivity.grid(
-            row=0, column=0, sticky="nswe", padx=5, pady=0)
+            row=0, column=0, sticky="nswe", padx=(0,0), pady=0)
         self.ERGlabelPlanarity.grid(
-            row=0, column=1, sticky="nswe", padx=5, pady=0)
+            row=0, column=1, sticky="nswe", padx=(15,0), pady=0)
         self.ERGlabelTrianglesPresence.grid(
-            row=0, column=2, sticky="nswe", padx=5, pady=0)
-        
+            row=0, column=2, sticky="nswe", padx=(15,0), pady=0)
         ############################################
         #    creating elements for optionsFrame    #
         ############################################
@@ -702,7 +704,6 @@ class App(customtkinter.CTk):
             row=7, column=0, sticky="nswe", padx=10, pady=10)
         self.ERGradGiantConnComp.grid(
             row=8, column=0, sticky="nswe", padx=10, pady=10)
-
         ##########################################
         #    creating elements for inputFrame    #
         ##########################################
@@ -734,11 +735,11 @@ class App(customtkinter.CTk):
             row=3, column=0, sticky="nswe", padx=10, pady=10)
         self.ERGsliderCConstant.grid(
             row=5, column=0, sticky="nswe", padx=10, pady=10)
-        
         ############################################
         #    creating elements for buttonsFrame    #
         ############################################
         self.ERGbtnCreate = customtkinter.CTkButton(master=self.ERGbuttonsFrame,text="Построить граф",height=60,width=480,command=ERG)
+        #plotting elements
         self.ERGbtnCreate.grid(row=1, column=0, sticky="nswe", padx=10, pady=10)
 
         #################################################################################################################################################################################
@@ -749,6 +750,9 @@ class App(customtkinter.CTk):
         #################################################################################################################################################################################
         #################################################################################################################################################################################
 
+        ################
+        #    frames    #
+        ################
         self.FrameBAG = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.FrameBAG.rowconfigure(14, weight=10)
         self.FrameBAG.columnconfigure(14, weight=10)
@@ -762,15 +766,15 @@ class App(customtkinter.CTk):
         self.BAGgraphInfoConnDegLabel = customtkinter.CTkLabel(master=self.BAGgraphInfo,anchor=customtkinter.CENTER,text='Связ. степени вершин:',height=20)
         self.BAGgraphInfoAddedEdgesLabel = customtkinter.CTkLabel(master=self.BAGgraphInfo,anchor=customtkinter.CENTER,text='Добавленные ребра:',height=20)
         self.BAGgraphInfoLoopCountLabel = customtkinter.CTkLabel(master=self.BAGgraphInfo,anchor=customtkinter.CENTER,text='Количество петель:',height=20)
-        self.BAGgraphInfoDeg = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=185, height=self.S_G_HEIGHT-50, corner_radius=10)
-        self.BAGgraphInfoConnDeg = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=185, height=self.S_G_HEIGHT-50, corner_radius=10)
-        self.BAGgraphInfoAddedEdges = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=185, height=self.S_G_HEIGHT-50, corner_radius=10)
-        self.BAGgraphInfoLoopCount = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=185, height=self.S_G_HEIGHT-50, corner_radius=10)
-        
-        self.BAGgraphDeg = customtkinter.CTkTextbox(master=self.BAGgraphInfoDeg,width=165,height=self.S_G_HEIGHT-70)
-        self.BAGgraphConnDeg = customtkinter.CTkTextbox(master=self.BAGgraphInfoConnDeg,width=165,height=self.S_G_HEIGHT-70)
-        self.BAGgraphAddedEdges = customtkinter.CTkTextbox(master=self.BAGgraphInfoAddedEdges,width=165,height=self.S_G_HEIGHT-70)
-        self.BAGgraphLoopCount = customtkinter.CTkTextbox(master=self.BAGgraphInfoLoopCount,width=165,height=self.S_G_HEIGHT-70)
+        self.BAGgraphInfoDeg = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=150, height=self.S_G_HEIGHT-50, corner_radius=10)
+        self.BAGgraphInfoConnDeg = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=150, height=self.S_G_HEIGHT-50, corner_radius=10)
+        self.BAGgraphInfoAddedEdges = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=150, height=self.S_G_HEIGHT-50, corner_radius=10)
+        self.BAGgraphInfoLoopCount = customtkinter.CTkFrame(master=self.BAGgraphInfo, width=150, height=self.S_G_HEIGHT-50, corner_radius=10)
+        self.BAGgraphDeg = customtkinter.CTkTextbox(master=self.BAGgraphInfoDeg,width=130,height=self.S_G_HEIGHT-70)
+        self.BAGgraphConnDeg = customtkinter.CTkTextbox(master=self.BAGgraphInfoConnDeg,width=130,height=self.S_G_HEIGHT-70)
+        self.BAGgraphAddedEdges = customtkinter.CTkTextbox(master=self.BAGgraphInfoAddedEdges,width=130,height=self.S_G_HEIGHT-70)
+        self.BAGgraphLoopCount = customtkinter.CTkTextbox(master=self.BAGgraphInfoLoopCount,width=130,height=self.S_G_HEIGHT-70)
+        #plotting elements
         self.BAGgraph.grid(
             row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,0))
         self.BAGgraphVisualizer.grid(
@@ -804,82 +808,87 @@ class App(customtkinter.CTk):
         self.BAGgraphLoopCount.grid(
             row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
         # parameters window
-        self.BAGoptions = customtkinter.CTkFrame(master=self.FrameBAG, height=210, width=1500, corner_radius=10)
-        self.BAGparam = customtkinter.CTkFrame(master=self.BAGoptions, height=200, width=490, corner_radius=10)
-        self.BAGseed = customtkinter.CTkFrame(master=self.BAGoptions, height=200, width=490, corner_radius=10)
-        self.BAGbuttons = customtkinter.CTkFrame(master=self.BAGoptions, height=200, width=490, corner_radius=10)
+        self.BAGoptions = customtkinter.CTkFrame(master=self.FrameBAG, height=170, width=1500, corner_radius=10)
+        self.BAGparam = customtkinter.CTkFrame(master=self.BAGoptions, height=150, width=340, corner_radius=10)
+        self.BAGseed = customtkinter.CTkFrame(master=self.BAGoptions, height=150, width=340, corner_radius=10)
+        self.BAGslider = customtkinter.CTkFrame(master=self.BAGoptions, height=150, width=790, corner_radius=10)
+        self.BAGbuttons = customtkinter.CTkFrame(master=self.BAGslider, height=75, width=790, corner_radius=10, fg_color=self.BAGslider._fg_color)
+        #plotting elements
         self.BAGoptions.grid(
             row=1, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
         self.BAGparam.grid(
             row=0, column=0, sticky="nswe", padx=(10,0), pady=(10,10))
         self.BAGseed.grid(
             row=0, column=1, sticky="nswe", padx=(10,0), pady=(10,10))
-        self.BAGbuttons.grid(
+        self.BAGslider.grid(
             row=0, column=2, sticky="nswe", padx=(10,10), pady=(10,10))
-        
+        self.BAGbuttons.grid(
+            row=2, column=0, sticky="nswe", padx=(0,0), pady=(0,0))
         ######################
         #    radiobuttons    #
         ######################
         self.BAGlabelParam = customtkinter.CTkLabel(master=self.BAGparam,anchor=customtkinter.W,text='Способы задания графа:')
         self.BAGselected = IntVar(value=0)
-        self.BAGradGraph = customtkinter.CTkRadioButton(master=self.BAGparam,width=460,text='Граф', 
+        self.BAGradGraph = customtkinter.CTkRadioButton(master=self.BAGparam,width=160,text='Граф', 
             value=0, variable=self.BAGselected, command = lambda v=0: self.updateSliders(v))
-        self.BAGradPseudograph = customtkinter.CTkRadioButton(master=self.BAGparam,width=460,text='Псевдограф',
+        self.BAGradPseudograph = customtkinter.CTkRadioButton(master=self.BAGparam,width=160,text='Псевдограф',
             value=1, variable=self.BAGselected, command = lambda v=1: self.updateSliders(v))
-        self.BAGradMultiGraph = customtkinter.CTkRadioButton(master=self.BAGparam,width=460,text='Мультиграф', 
+        self.BAGradMultiGraph = customtkinter.CTkRadioButton(master=self.BAGparam,width=160,text='Мультиграф', 
             value=2, variable=self.BAGselected, command = lambda v=2: self.updateSliders(v))
-        self.BAGradPseudoMultiGraph = customtkinter.CTkRadioButton(master=self.BAGparam,width=460,text='Псевдомультиграф', 
+        self.BAGradPseudoMultiGraph = customtkinter.CTkRadioButton(master=self.BAGparam,width=160,text='Псевдомультиграф', 
             value=3, variable=self.BAGselected, command = lambda v=3: self.updateSliders(v))
+        ######################
+        #    radiobuttons    #
+        ######################
         self.BAGlabelSeed = customtkinter.CTkLabel(master=self.BAGseed,anchor=customtkinter.W,text='Затравка:')
         self.BAGselectedSeed = IntVar(value=0)
-        self.BAGradDeg1_1 = customtkinter.CTkRadioButton(master=self.BAGseed,width=460,text='Степени 1-1', 
+        self.BAGradDeg1_1 = customtkinter.CTkRadioButton(master=self.BAGseed,width=160,text='Степени 1-1', 
             value=0, variable=self.BAGselectedSeed, command = lambda v=0: self.updateSliders(v))
-        self.BAGradDeg2_2_2 = customtkinter.CTkRadioButton(master=self.BAGseed,width=460,text='Степени 2-2-2', 
+        self.BAGradDeg2_2_2 = customtkinter.CTkRadioButton(master=self.BAGseed,width=160,text='Степени 2-2-2', 
             value=1, variable=self.BAGselectedSeed, command = lambda v=1: self.updateSliders(v))
-        self.BAGradDeg1_2_2_3 = customtkinter.CTkRadioButton(master=self.BAGseed,width=460,text='Степени 1-2-2-3', 
+        self.BAGradDeg1_2_2_3 = customtkinter.CTkRadioButton(master=self.BAGseed,width=160,text='Степени 1-2-2-3', 
             value=2, variable=self.BAGselectedSeed, command = lambda v=2: self.updateSliders(v))
         #plotting elements
         self.BAGlabelParam.grid(
-            row=0, column=0, sticky="nswe", padx=10, pady=10) 
+            row=0, column=0, sticky="nswe", padx=10, pady=(10,0)) 
         self.BAGradGraph.grid(
             row=1, column=0, sticky="nswe", padx=10, pady=10)
         self.BAGradPseudograph.grid(
             row=2, column=0, sticky="nswe", padx=10, pady=10)
         self.BAGradMultiGraph.grid(
-            row=3, column=0, sticky="nswe", padx=10, pady=10)
+            row=1, column=1, sticky="nswe", padx=10, pady=10)
         self.BAGradPseudoMultiGraph.grid(
-            row=4, column=0, sticky="nswe", padx=10, pady=10)
+            row=2, column=1, sticky="nswe", padx=10, pady=10)
         #plotting elements
         self.BAGlabelSeed.grid(
-            row=0, column=0, sticky="nswe", padx=10, pady=10)
+            row=0, column=0, sticky="nswe", padx=10, pady=(10,0))
         self.BAGradDeg1_1.grid(
             row=1, column=0, sticky="nswe", padx=10, pady=10)
         self.BAGradDeg2_2_2.grid(
             row=2, column=0, sticky="nswe", padx=10, pady=10)
         self.BAGradDeg1_2_2_3.grid(
-            row=3, column=0, sticky="nswe", padx=10, pady=10)
-                
+            row=1, column=1, sticky="nswe", padx=10, pady=10)
         ##################
         #    buttons     #
         ##################
         bag = BAG()
         self.edgesCount = 1
-        self.BAGlabelEdges = customtkinter.CTkLabel(master=self.BAGbuttons,height=20,anchor=customtkinter.W,text=f"Количество добавляемых ребер: {self.edgesCount}")
-        self.BAGsliderEdges = customtkinter.CTkSlider(master=self.BAGbuttons,height=25,width=480,from_=1, to=2, number_of_steps=1,state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
-        self.BAGbtnCreate = customtkinter.CTkButton(master=self.BAGbuttons,text="Построить граф заново",height=45,width=480,command=bag.newGraph)
-        self.BAGbtnAdd = customtkinter.CTkButton(master=self.BAGbuttons,text="Добавить вершину",height=45,width=480,command=bag.addVertex, state="disabled")
+        self.BAGlabelEdges = customtkinter.CTkLabel(master=self.BAGslider,height=20,anchor=customtkinter.W,text=f"Количество добавляемых ребер: {self.edgesCount}")
+        self.BAGsliderEdges = customtkinter.CTkSlider(master=self.BAGslider,height=25,width=480,from_=1, to=2, number_of_steps=1,state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
+        self.BAGbtnCreate = customtkinter.CTkButton(master=self.BAGbuttons,text="Построить граф заново",height=45,width=360,command=bag.newGraph)
+        self.BAGbtnAdd = customtkinter.CTkButton(master=self.BAGbuttons,text="Добавить вершину",height=45,width=360,command=bag.addVertex, state="disabled")
+        #plotting elements
         self.BAGlabelEdges.grid(
-            row=0, column=0, sticky="nswe", padx=10, pady=10)
+            row=0, column=0, sticky="nswe", padx=10, pady=(10,0))
         self.BAGsliderEdges.grid(
-            row=1, column=0, sticky="nswe", padx=10, pady=10)
+            row=1, column=0, sticky="nswe", padx=10, pady=(10,0))
         self.BAGbtnCreate.grid(
-            row=2, column=0, sticky="nswe", padx=10, pady=10)
+            row=0, column=0, sticky="nswe", padx=(10,0), pady=(10,10))
         self.BAGbtnAdd.grid(
-            row=3, column=0, sticky="nswe", padx=10, pady=10)
+            row=0, column=1, sticky="nswe", padx=10, pady=(10,10))
         self.BAGsliderEdges.configure(command = lambda v=self.edgesCount: self.updateCountSliderLabelBAG(v))
         self.BAGsliderEdges.set(self.edgesCount)
-        
-        
+                
         #################################################################################################################################################################################
         #################################################################################################################################################################################
         #################################################################################################################################################################################
@@ -887,6 +896,10 @@ class App(customtkinter.CTk):
         #################################################################################################################################################################################
         #################################################################################################################################################################################
         #################################################################################################################################################################################
+        
+        ################
+        #    frames    #
+        ################
         self.FrameBRG = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.FrameBRG.rowconfigure(14, weight=10)
         self.FrameBRG.columnconfigure(14, weight=10)
@@ -898,10 +911,11 @@ class App(customtkinter.CTk):
         self.BRGgraphInfo = customtkinter.CTkFrame(master=self.BRGgraph, width=720, corner_radius=10)
         self.BRGgraphInfoAddedEdgesLabel = customtkinter.CTkLabel(master=self.BRGgraphInfo,anchor=customtkinter.CENTER,text='Добавленные ребра:',height=20)
         self.BRGgraphInfoLoopCountLabel = customtkinter.CTkLabel(master=self.BRGgraphInfo,anchor=customtkinter.CENTER,text='Количество петель:',height=20)
-        self.BRGgraphInfoAddedEdges = customtkinter.CTkFrame(master=self.BRGgraphInfo, width=285, height=self.M_G_HEIGHT-50, corner_radius=10)
-        self.BRGgraphInfoLoopCount = customtkinter.CTkFrame(master=self.BRGgraphInfo, width=285, height=self.M_G_HEIGHT-50, corner_radius=10)
-        self.BRGgraphAliquotEdges = customtkinter.CTkTextbox(master=self.BRGgraphInfoAddedEdges,width=275,height=self.M_G_HEIGHT-70,state=DISABLED)
-        self.BRGgraphLoopCount = customtkinter.CTkTextbox(master=self.BRGgraphInfoLoopCount,width=275,height=self.M_G_HEIGHT-70,state=DISABLED)
+        self.BRGgraphInfoAddedEdges = customtkinter.CTkFrame(master=self.BRGgraphInfo, width=265, height=self.M_G_HEIGHT-50, corner_radius=10)
+        self.BRGgraphInfoLoopCount = customtkinter.CTkFrame(master=self.BRGgraphInfo, width=265, height=self.M_G_HEIGHT-50, corner_radius=10)
+        self.BRGgraphAliquotEdges = customtkinter.CTkTextbox(master=self.BRGgraphInfoAddedEdges,width=255,height=self.M_G_HEIGHT-70,state=DISABLED)
+        self.BRGgraphLoopCount = customtkinter.CTkTextbox(master=self.BRGgraphInfoLoopCount,width=255,height=self.M_G_HEIGHT-70,state=DISABLED)
+        #plotting elements
         self.BRGgraph.grid(
             row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,0))
         self.BRGgraphVisualizer.grid(
@@ -923,11 +937,12 @@ class App(customtkinter.CTk):
         self.BRGgraphLoopCount.grid(
             row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
         # parameters window
-        self.BRGoptions = customtkinter.CTkFrame(master=self.FrameBRG, height=150, width=1515, corner_radius=10)
+        self.BRGoptions = customtkinter.CTkFrame(master=self.FrameBRG, height=150, width=1505, corner_radius=10)
         self.BRGinput = customtkinter.CTkFrame(master=self.BRGoptions, height=140, width=495, corner_radius=10)
         self.BRGframeK = customtkinter.CTkFrame(master=self.BRGoptions, height=140, width=495, corner_radius=10)
         self.BRGbuttons = customtkinter.CTkFrame(master=self.BRGoptions, height=140, width=495, corner_radius=10)
         self.BRGoptions.grid(
+        #plotting elements
             row=1, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
         self.BRGinput.grid(
             row=0, column=0, sticky="nswe", padx=(10,0), pady=(10,10))
@@ -935,27 +950,26 @@ class App(customtkinter.CTk):
             row=0, column=1, sticky="nswe", padx=(10,0), pady=(10,10))
         self.BRGbuttons.grid(
             row=0, column=2, sticky="nswe", padx=(10,10), pady=(10,10))
-        
         ###############
         #    input    #
         ###############
         self.BRGedgesCount = 1
         self.BRGlabelEdges = customtkinter.CTkLabel(master=self.BRGinput,height=20,anchor=customtkinter.W,text=f"Размер компоненты при разбиении (k): {self.BRGedgesCount}")
         self.BRGsliderEdges = customtkinter.CTkSlider(master=self.BRGinput,height=25,width=480,from_=1, to=2, number_of_steps=1, state="disabled",button_color=App.Colors.sliderDisabled,progress_color=App.Colors.sliderDisabled)
+        #plotting elements
         self.BRGlabelEdges.grid(
             row=0, column=0, sticky="nswe", padx=10, pady=10)
         self.BRGsliderEdges.grid(
-            row=1, column=0, sticky="nswe", padx=10, pady=10)
+            row=1, column=0, sticky="nswe", padx=10, pady=(0,10))
         self.BRGsliderEdges.configure(command = lambda v=self.BRGedgesCount: self.updateCountSliderLabelBRG(v))
         self.BRGsliderEdges.set(self.BRGedgesCount)
-        
-        ###############
-        #    count    #
-        ###############
+        #################
+        #    counter    #
+        #################
         self.BRGvertexCount = 0
         self.BRGlabelTitleK = customtkinter.CTkLabel(master=self.BRGframeK,anchor=customtkinter.W,text='Количество вершин:')
         self.BRGlabelFrameK = customtkinter.CTkFrame(master=self.BRGframeK,corner_radius=10)
-        self.BRGlabelK = customtkinter.CTkLabel(master=self.BRGlabelFrameK,anchor=customtkinter.W,text='',height=35,width=200)
+        self.BRGlabelK = customtkinter.CTkLabel(master=self.BRGlabelFrameK,anchor=customtkinter.W,text='',height=15,width=200)
         #plotting elements
         self.BRGlabelTitleK.grid(
             row=0, column=0, sticky="nswe", padx=(10,10), pady=(10,0))
@@ -963,23 +977,23 @@ class App(customtkinter.CTk):
             row=1, column=0, sticky="nswe", padx=(10,10), pady=(0,10))
         self.BRGlabelK.grid(
             row=1, column=0, sticky="nswe", padx=(10,10), pady=(10,10))
-                
         ##################
         #    buttons     #
         ##################
         brg = BRG()
-        self.BRGbtnCreate = customtkinter.CTkButton(master=self.BRGbuttons,text="Построить граф заново",height=80,width=270,
+        self.BRGbtnCreate = customtkinter.CTkButton(master=self.BRGbuttons,text="Построить граф заново",height=50,width=270,
             command=brg.newGraph)
-        self.BRGbtnAdd = customtkinter.CTkButton(master=self.BRGbuttons,text="Добавить вершину",height=80,width=210,
+        self.BRGbtnAdd = customtkinter.CTkButton(master=self.BRGbuttons,text="Добавить вершину",height=50,width=210, state=DISABLED,
             command=brg.addVertex)
-        self.BRGbtnBreak = customtkinter.CTkButton(master=self.BRGbuttons,text="Разбить граф",height=80,width=210,
+        self.BRGbtnBreak = customtkinter.CTkButton(master=self.BRGbuttons,text="Разбить граф",height=50,width=210, state=DISABLED,
             command=brg.breakGraph)
+        #plotting elements
         self.BRGbtnCreate.grid(
-            row=0, column=0, sticky="nswe", padx=(10,0), pady=(10,10))
+            row=0, column=0, sticky="nswe", padx=(10,0), pady=(15,15))
         self.BRGbtnAdd.grid(
-            row=0, column=1, sticky="nswe", padx=(10,0), pady=(10,10))
+            row=0, column=1, sticky="nswe", padx=(10,0), pady=(15,15))
         self.BRGbtnBreak.grid(
-            row=0, column=2, sticky="nswe", padx=(10,10), pady=(10,10))
+            row=0, column=2, sticky="nswe", padx=(10,10), pady=(15,15))
         
         #################################################################################################################################################################################
         #################################################################################################################################################################################
