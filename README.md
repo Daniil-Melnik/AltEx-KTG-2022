@@ -1,7 +1,7 @@
 ![CodeSize](https://img.shields.io/github/languages/code-size/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
 ![Repo](https://img.shields.io/github/repo-size/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
 ![LastCommint](https://img.shields.io/github/last-commit/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
-![Releases](https://img.shields.io/github/downloads/Daniil-Melnik/AltEx-KTG-2022/total?style=for-the-badge)
+![Releases](https://img.shields.io/github/downloads/AlexeyLepov/AltEx-KTG-2022/total?style=for-the-badge)
 
 # Реализация программы-калькулятора для вычисления характеристик случайных графов // Implementation of a program for calculating random graphs characteristics
 
