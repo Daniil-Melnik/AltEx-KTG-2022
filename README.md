@@ -16,6 +16,7 @@
 ```bash
 pip3 install -r requirements.txt
 ```
+Также можете воспользоваться установщиком // Also you can use the installer: https://github.com/AlexeyLepov/AltEx-KTG-2022/releases/tag/v1.0.0-final-installer
 
 ## Пример работы программы на модели Erdős-Rényi:
 ![ERG](https://user-images.githubusercontent.com/77492646/210180061-2a438bdb-b592-4990-8ca3-566b1dff307b.gif)
