@@ -218,8 +218,6 @@ Label(frame43, text="наличие треугольников", background=colo
 lbl3 = Label(frame43, text='-', font='Arial 12 bold', foreground='#ff0000', background=colors['bfr'])
 lbl3.place(x=200, y=0)
 
-img = ImageTk.PhotoImage(Image.open("start1.png"))
-
 btn = Button(root, text="отправить", command=Get_data, width=10, height=1, font='Arial 20 bold', background='#228B22', foreground='#FFFFFF')
 btn.place(x=460, y=380)
 
