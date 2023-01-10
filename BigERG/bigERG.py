@@ -48,15 +48,15 @@ def Get_data():
         p=float(txtp.get())
         txtс.delete(0, END)
         txtс.insert(0,'c')
-    f = open("data.txt", "w")
+    f = open("BigERG/data.txt", "w")
     f.write(str(n)+'\n')
     f.write(str(p)+'\n')
     
 
 def Show_Graph():
     G= nx.Graph()
-    edges = nx.read_edgelist('edges.txt')
-    nodes = nx.read_adjlist("nodes.txt")
+    edges = nx.read_edgelist('BigERG/edges.txt')
+    nodes = nx.read_adjlist("BigERG/nodes.txt")
     G.add_edges_from(edges.edges())
     G.add_nodes_from(nodes)
 
@@ -97,7 +97,7 @@ def Show_Graph():
         lbl1.configure(text="-", foreground='#ff0000')
     print(max(nx.connected_components(G)))
     plt.axis('on')
-    plt.savefig("st.png")
+    plt.savefig("BigERG/st.png")
     
         
 
