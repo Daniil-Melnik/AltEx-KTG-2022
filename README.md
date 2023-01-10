@@ -1,7 +1,7 @@
 ![CodeSize](https://img.shields.io/github/languages/code-size/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
 ![Repo](https://img.shields.io/github/repo-size/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
 ![LastCommint](https://img.shields.io/github/last-commit/Daniil-Melnik/AltEx-KTG-2022?style=for-the-badge)
-![Releases](https://img.shields.io/github/downloads/Daniil-Melnik/AltEx-KTG-2022/total?style=for-the-badge)
+![Releases](https://img.shields.io/github/downloads/AlexeyLepov/AltEx-KTG-2022/total?style=for-the-badge)
 
 # Реализация программы-калькулятора для вычисления характеристик случайных графов // Implementation of a program for calculating random graphs characteristics
 
@@ -16,6 +16,7 @@
 ```bash
 pip3 install -r requirements.txt
 ```
+Также можете воспользоваться установщиком // Also you can use the installer: https://github.com/AlexeyLepov/AltEx-KTG-2022/releases/tag/v1.0.0-final-installer
 
 ## Пример работы программы на модели Erdős-Rényi:
 ![ERG](https://user-images.githubusercontent.com/77492646/210180061-2a438bdb-b592-4990-8ca3-566b1dff307b.gif)
