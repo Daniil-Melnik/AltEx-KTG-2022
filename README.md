@@ -5,10 +5,6 @@
 
 # Реализация программы-калькулятора для вычисления характеристик случайных графов // Implementation of a program for calculating random graphs characteristics
 
-## Участники разработки, студенты СПбГЭТУ (ЛЭТИ):
-- Мельник Даниил, гр. 1308,
-- Лепов Алексей, гр. 1308.
-
 ## Установка // Installation:
 
 Для корректного отображения может потребоваться изменение float параметра (от 0.4 до 2) в первой строке файла конфигурации **`scale.config`** // For correct display, you may need to change the float parameter (from 0.4 to 2) in the first line of **`scale.config`**
